@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Convenience Store Stock Management</string>
+    <string name="main_greeting">Hello Android!</string>
+    <string name="main_greeting_loading">Loading greeting...</string>
+</resources>

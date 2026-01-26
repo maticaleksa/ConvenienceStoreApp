@@ -1,0 +1,29 @@
+*.iml
+*.log
+.DS_Store
+
+# Gradle
+.gradle/
+**/build/
+**/out/
+.kotlin/
+
+# Android
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# IntelliJ/Android Studio
+.idea/
+!.idea/codeStyles/
+!.idea/icon.png
+!.idea/icon_dark.png
+!.idea/runConfigurations/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Secrets
+**/google-services.json
