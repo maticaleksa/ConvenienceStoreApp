@@ -2,14 +2,11 @@ package com.aleksa.network
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
 class KtorNetworkExecutor(
-    private val client: HttpClient = createDefaultClient(),
+    private val client: HttpClient,
 ) : NetworkExecutor {
     override suspend fun executeRaw(
         block: suspend HttpClient.() -> HttpResponse,
@@ -24,25 +21,8 @@ class KtorNetworkExecutor(
                 NetworkResult.Error(error)
             }
         } catch (e: Exception) {
-            NetworkResult.Exception(e)
+            NetworkResult.Error(ErrorResponse(message = e.message ?: "Network request failed"))
         }
     }
 
-    companion object {
-        fun createDefaultClient(): HttpClient {
-            return HttpClient {
-                expectSuccess = false
-                install(ContentNegotiation) {
-                    json(
-                        Json {
-                            ignoreUnknownKeys = true
-                            isLenient = true
-                        },
-                    )
-                }
-            }
-        }
-    }
 }
-
-private fun HttpStatusCode.isSuccess(): Boolean = value in 200..299

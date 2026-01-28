@@ -43,11 +43,18 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.startup.runtime)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(project(":network"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":core-arch"))
+    implementation(libs.androidx.room.runtime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

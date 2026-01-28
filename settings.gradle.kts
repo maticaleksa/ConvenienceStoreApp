@@ -1,3 +1,4 @@
+
 pluginManagement {
     repositories {
         google {
@@ -22,3 +23,6 @@ dependencyResolutionManagement {
 rootProject.name = "Convenience Store Stock Management"
 include(":app")
 include(":network")
+include(":domain")
+include(":data")
+include(":core-arch")

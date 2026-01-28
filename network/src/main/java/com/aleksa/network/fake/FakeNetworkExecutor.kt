@@ -68,8 +68,12 @@ class FakeNetworkExecutor(
                             headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())),
                         )
                     }
-                    is NetworkResult.Exception -> {
-                        throw mapped.exception
+                    else -> {
+                        respond(
+                            content = """{"message":"Invalid fake response"}""",
+                            status = HttpStatusCode.InternalServerError,
+                            headers = headersOf("Content-Type" to listOf(ContentType.Application.Json.toString())),
+                        )
                     }
                 }
             }
@@ -83,7 +87,7 @@ class FakeNetworkExecutor(
             val response = block(mockClient)
             NetworkResult.Success(response)
         } catch (e: Exception) {
-            NetworkResult.Exception(e)
+            NetworkResult.Error(ErrorResponse(message = e.message ?: "Network request failed"))
         }
     }
 }

@@ -3,7 +3,9 @@ package com.aleksa.conveniencestorestockmanagement
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -12,9 +14,11 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainFragment())
-                .commit()
+            lifecycleScope.launch {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, MainFragment())
+                    .commit()
+            }
         }
     }
 }

@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.aleksa.conveniencestorestockmanagement.domain.GetGreetingUseCase
+import androidx.lifecycle.repeatOnLifecycle
+import com.aleksa.domain.ProductRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +17,7 @@ import javax.inject.Inject
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     @Inject
-    lateinit var getGreetingUseCase: GetGreetingUseCase
+    lateinit var productRepository: ProductRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -22,7 +25,18 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         greetingView.text = getString(R.string.main_greeting_loading)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            greetingView.text = getGreetingUseCase()
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productRepository.observeAll().collectLatest { products ->
+                    greetingView.text =
+                        if (products.isEmpty()) {
+                            "No products."
+                        } else {
+                            products.joinToString(separator = "\n\n") { product ->
+                                "${product.name} • ${product.currentStockLevel} in stock\n${product.price}"
+                            }
+                        }
+                }
+            }
         }
     }
 }
