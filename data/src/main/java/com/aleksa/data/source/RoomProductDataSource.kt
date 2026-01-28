@@ -12,6 +12,9 @@ class RoomProductDataSource @Inject constructor(
 
     override fun getAllFlow(): Flow<List<ProductEntity>> = productDao.getAllFlow()
 
+    override fun searchFlow(query: String): Flow<List<ProductEntity>> =
+        productDao.searchFlow(query)
+
     override suspend fun count(): Int = productDao.count()
 
     override suspend fun getAllIds(): List<String> = productDao.getAllIds()

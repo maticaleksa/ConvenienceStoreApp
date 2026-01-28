@@ -7,4 +7,14 @@
     <string name="nav_suppliers">Suppliers</string>
     <string name="nav_transactions">Transactions</string>
     <string name="nav_stock">Stock</string>
+    <string name="empty_products">No products yet.</string>
+    <string name="empty_products_search">No results for "%1$s".</string>
+    <plurals name="product_stock_format">
+        <item quantity="one">%1$d in stock</item>
+        <item quantity="other">%1$d in stock</item>
+    </plurals>
+    <string name="product_price_format">$%1$s</string>
+    <string name="products_search_hint">Search products</string>
+    <string name="products_filter">Filter products</string>
+    <string name="products_clear_search">Clear search</string>
 </resources>

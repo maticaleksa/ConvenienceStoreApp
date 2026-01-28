@@ -16,6 +16,17 @@ interface ProductDao {
     @Query("SELECT * FROM products ORDER BY name ASC")
     fun getAllFlow(): Flow<List<ProductEntity>>
 
+    @Query(
+        """
+        SELECT * FROM products
+        WHERE LOWER(name) LIKE :query
+           OR LOWER(barcode) LIKE :query
+           OR LOWER(category) LIKE :query
+        ORDER BY name ASC
+        """
+    )
+    fun searchFlow(query: String): Flow<List<ProductEntity>>
+
     @Query("SELECT COUNT(*) FROM products")
     suspend fun count(): Int
 

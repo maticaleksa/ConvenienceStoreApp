@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductDataSource {
     suspend fun getAll(): List<ProductEntity>
     fun getAllFlow(): Flow<List<ProductEntity>>
+    fun searchFlow(query: String): Flow<List<ProductEntity>>
     suspend fun count(): Int
     suspend fun getAllIds(): List<String>
     suspend fun getById(id: String): ProductEntity?

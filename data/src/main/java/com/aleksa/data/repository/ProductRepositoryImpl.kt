@@ -31,7 +31,7 @@ class ProductRepositoryImpl @Inject constructor(
     syncCoordinator: SyncCoordinator,
     @AppScope private val coroutineScope: CoroutineScope,
 ) : ProductRepository {
-    private val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
+    val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
 
     init {
         coroutineScope.launch {
@@ -51,6 +51,17 @@ class ProductRepositoryImpl @Inject constructor(
 
     override fun observeAll(): Flow<List<Product>> {
         return localDataSource.getAllFlow().map { productList ->
+            productList.map { product ->
+                product.toDomain()
+            }
+        }
+    }
+
+    override fun observeSearch(query: String): Flow<List<Product>> {
+        val trimmed = query.trim()
+        if (trimmed.isBlank()) return observeAll()
+        val likeQuery = "%${trimmed.lowercase()}%"
+        return localDataSource.searchFlow(likeQuery).map { productList ->
             productList.map { product ->
                 product.toDomain()
             }

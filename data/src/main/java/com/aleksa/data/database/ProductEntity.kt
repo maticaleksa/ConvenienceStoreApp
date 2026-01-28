@@ -3,6 +3,7 @@ package com.aleksa.data.database
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.aleksa.domain.Money
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Supplier
 import com.aleksa.data.remote.ProductDto
@@ -13,7 +14,7 @@ data class ProductEntity(
     @PrimaryKey val id: String,
     val name: String,
     val description: String,
-    val price: Double,
+    val priceMinor: Long,
     val category: String,
     val barcode: String,
     @Embedded(prefix = "supplier_") val supplier: SupplierEmbedded,
@@ -34,7 +35,7 @@ fun ProductEntity.toDomain(): Product = Product(
     id = id,
     name = name,
     description = description,
-    price = price,
+    price = Money.ofMinor(priceMinor),
     category = category,
     barcode = barcode,
     supplier = supplier.toDomain(),
@@ -46,7 +47,7 @@ fun Product.toEntity(): ProductEntity = ProductEntity(
     id = id,
     name = name,
     description = description,
-    price = price,
+    priceMinor = price.minor,
     category = category,
     barcode = barcode,
     supplier = supplier.toEmbedded(),
@@ -76,7 +77,7 @@ fun ProductDto.toEntity(): ProductEntity = ProductEntity(
     id = id,
     name = name,
     description = description,
-    price = price,
+    priceMinor = Money.ofDouble(price).minor,
     category = category,
     barcode = barcode,
     supplier = supplier.toEmbedded(),

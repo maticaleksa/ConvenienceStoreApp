@@ -33,7 +33,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                             "No products."
                         } else {
                             products.joinToString(separator = "\n\n") { product ->
-                                "${product.name} • ${product.currentStockLevel} in stock\n${product.price}"
+                                "${product.name} • ${product.currentStockLevel} in stock\n${product.price.toDecimalString()}"
                             }
                         }
                 }
