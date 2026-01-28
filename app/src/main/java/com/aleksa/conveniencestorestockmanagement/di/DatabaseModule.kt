@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.aleksa.core.arch.event.DefaultDataCommandBus
 import com.aleksa.core.arch.event.DataCommandBus
+import com.aleksa.data.database.CategoryDao
 import com.aleksa.data.database.ProductDao
 import com.aleksa.data.database.StockManagementDatabase
+import com.aleksa.data.source.CategoryDataSource
 import com.aleksa.data.source.ProductDataSource
+import com.aleksa.data.source.RoomCategoryDataSource
 import com.aleksa.data.source.RoomProductDataSource
 import dagger.Module
 import dagger.Provides
@@ -37,11 +40,22 @@ object DatabaseModule {
     ): ProductDao = database.productDao()
 
     @Provides
+    fun provideCategoryDao(
+        database: StockManagementDatabase,
+    ): CategoryDao = database.categoryDao()
+
+    @Provides
     fun provideProductDataSource(
         dataSource: RoomProductDataSource,
     ): ProductDataSource = dataSource
 
     @Provides
+    fun provideCategoryDataSource(
+        dataSource: RoomCategoryDataSource,
+    ): CategoryDataSource = dataSource
+
+    @Provides
     @Singleton
     fun provideDomainEventBus(): DataCommandBus = DefaultDataCommandBus()
+
 }

@@ -2,6 +2,7 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aleksa.conveniencestorestockmanagement.uistate.ProductsUiState
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.data.repository.ProductsSyncChannelKey
@@ -79,11 +80,4 @@ class ProductsViewModel @Inject constructor(
     }
 }
 
-data class ProductsUiState(
-    val isLoading: Boolean = false,
-    val isSyncing: Boolean = false,
-    val items: List<Product> = emptyList(),
-    val searchQuery: String = "",
-    val isEmpty: Boolean = false,
-    val isSearchActive: Boolean = false
-)
+

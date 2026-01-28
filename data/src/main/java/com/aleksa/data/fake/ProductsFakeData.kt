@@ -3,6 +3,7 @@ package com.aleksa.data.fake
 import com.aleksa.data.remote.ProductDto
 import com.aleksa.data.remote.SupplierDto
 import com.aleksa.domain.Money
+import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Supplier
 
@@ -24,6 +25,12 @@ val supplierB = Supplier(
     address = "45 Market Ave",
 )
 
+val categoryDairy = Category(id = "dairy", name = "Dairy")
+val categoryBakery = Category(id = "bakery", name = "Bakery")
+val categoryBeverages = Category(id = "beverages", name = "Beverages")
+val categorySnacks = Category(id = "snacks", name = "Snacks")
+val categoryGrocery = Category(id = "grocery", name = "Grocery")
+
 val fakeProductsList =
     listOf(
         Product(
@@ -31,7 +38,7 @@ val fakeProductsList =
             name = "Milk 1L",
             description = "Fresh whole milk",
             price = Money.ofDouble(1.49),
-            category = "Dairy",
+            category = categoryDairy,
             barcode = "111111",
             supplier = supplierB,
             currentStockLevel = 2,
@@ -42,7 +49,7 @@ val fakeProductsList =
             name = "White Bread",
             description = "Sliced white bread",
             price = Money.ofDouble(0.99),
-            category = "Bakery",
+            category = categoryBakery,
             barcode = "222222",
             supplier = supplierB,
             currentStockLevel = 1,
@@ -53,7 +60,7 @@ val fakeProductsList =
             name = "Eggs (12 pack)",
             description = "Free range eggs",
             price = Money.ofDouble(2.99),
-            category = "Dairy",
+            category = categoryDairy,
             barcode = "333333",
             supplier = supplierB,
             currentStockLevel = 12,
@@ -64,7 +71,7 @@ val fakeProductsList =
             name = "Cola 0.5L",
             description = "Carbonated soft drink",
             price = Money.ofDouble(1.29),
-            category = "Beverages",
+            category = categoryBeverages,
             barcode = "444444",
             supplier = supplierA,
             currentStockLevel = 20,
@@ -75,7 +82,7 @@ val fakeProductsList =
             name = "Chocolate Bar",
             description = "Milk chocolate",
             price = Money.ofDouble(0.79),
-            category = "Snacks",
+            category = categorySnacks,
             barcode = "555555",
             supplier = supplierA,
             currentStockLevel = 30,
@@ -86,7 +93,7 @@ val fakeProductsList =
             name = "Pasta 500g",
             description = "Durum wheat pasta",
             price = Money.ofDouble(1.19),
-            category = "Grocery",
+            category = categoryGrocery,
             barcode = "666666",
             supplier = supplierA,
             currentStockLevel = 15,
@@ -97,7 +104,7 @@ val fakeProductsList =
             name = "Tomato Sauce",
             description = "Classic tomato sauce",
             price = Money.ofDouble(1.59),
-            category = "Grocery",
+            category = categoryGrocery,
             barcode = "777777",
             supplier = supplierA,
             currentStockLevel = 8,
@@ -112,7 +119,7 @@ val fakeProductsDtoList =
             name = it.name,
             description = it.description,
             price = it.price.toDecimalString().toDouble(),
-            category = it.category,
+            category = it.category.name,
             barcode = it.barcode,
             supplier = SupplierDto(
                 id = it.supplier.id,

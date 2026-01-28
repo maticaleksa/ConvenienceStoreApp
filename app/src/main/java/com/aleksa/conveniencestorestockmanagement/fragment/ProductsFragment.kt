@@ -1,6 +1,7 @@
 package com.aleksa.conveniencestorestockmanagement.fragment
 
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -9,9 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.ProductsAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductsViewModel
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,12 +26,12 @@ class ProductsFragment : Fragment(R.layout.fragment_products) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<RecyclerView>(R.id.products_list)
         val swipeRefresh =
-            view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.products_swipe_refresh)
+            view.findViewById<SwipeRefreshLayout>(R.id.products_swipe_refresh)
         val emptyView = view.findViewById<TextView>(R.id.products_empty)
         val searchInput =
-            view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.products_search)
+            view.findViewById<TextInputEditText>(R.id.products_search)
         val clearButton =
-            view.findViewById<androidx.appcompat.widget.AppCompatImageButton>(R.id.products_clear_button)
+            view.findViewById<AppCompatImageButton>(R.id.products_clear_button)
         val adapter = ProductsAdapter()
         listView.layoutManager = LinearLayoutManager(requireContext())
         listView.adapter = adapter

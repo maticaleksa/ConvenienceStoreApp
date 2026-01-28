@@ -3,8 +3,11 @@ package com.aleksa.data.repository
 import com.aleksa.core.arch.coroutines.AppScope
 import com.aleksa.data.database.toDomain
 import com.aleksa.data.database.toEntity
+import com.aleksa.data.database.toCategoryEntity
+import com.aleksa.data.database.normalizeCategoryId
 import com.aleksa.data.database.ProductEntity
 import com.aleksa.data.source.ProductDataSource
+import com.aleksa.data.source.CategoryDataSource
 import com.aleksa.data.source.ProductRemoteDataSource
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.error.ProductSyncError
@@ -26,6 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class ProductRepositoryImpl @Inject constructor(
     private val localDataSource: ProductDataSource,
+    private val categoryDataSource: CategoryDataSource,
     private val remoteDataSource: ProductRemoteDataSource,
     private val dataCommandBus: DataCommandBus,
     syncCoordinator: SyncCoordinator,
@@ -74,7 +78,13 @@ class ProductRepositoryImpl @Inject constructor(
 
             when (networkResult) {
                 is NetworkResult.Success -> {
-                    val fresh = networkResult.data.map { it.toEntity() }
+                    val categories = networkResult.data
+                        .map { it.toCategoryEntity() }
+                        .distinctBy { it.id }
+                    categoryDataSource.upsertAll(categories)
+                    val fresh = networkResult.data.map {
+                        it.toEntity(normalizeCategoryId(it.category))
+                    }
                     localDataSource.upsertAll(fresh)
                     removeProductsThatNoLongerExistOnRemote(fresh)
                 }

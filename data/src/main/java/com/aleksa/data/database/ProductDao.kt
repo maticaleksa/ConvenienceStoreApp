@@ -5,27 +5,31 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
+    @Transaction
     @Query("SELECT * FROM products ORDER BY name ASC")
-    suspend fun getAll(): List<ProductEntity>
+    suspend fun getAll(): List<ProductWithCategory>
 
+    @Transaction
     @Query("SELECT * FROM products ORDER BY name ASC")
-    fun getAllFlow(): Flow<List<ProductEntity>>
+    fun getAllFlow(): Flow<List<ProductWithCategory>>
 
+    @Transaction
     @Query(
         """
         SELECT * FROM products
         WHERE LOWER(name) LIKE :query
            OR LOWER(barcode) LIKE :query
-           OR LOWER(category) LIKE :query
+           OR categoryId IN (SELECT id FROM categories WHERE LOWER(name) LIKE :query)
         ORDER BY name ASC
         """
     )
-    fun searchFlow(query: String): Flow<List<ProductEntity>>
+    fun searchFlow(query: String): Flow<List<ProductWithCategory>>
 
     @Query("SELECT COUNT(*) FROM products")
     suspend fun count(): Int
@@ -33,11 +37,13 @@ interface ProductDao {
     @Query("SELECT id FROM products")
     suspend fun getAllIds(): List<String>
 
+    @Transaction
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
-    suspend fun getById(id: String): ProductEntity?
+    suspend fun getById(id: String): ProductWithCategory?
 
+    @Transaction
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
-    fun getByIdFlow(id: String): Flow<ProductEntity?>
+    fun getByIdFlow(id: String): Flow<ProductWithCategory?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(products: List<ProductEntity>)
