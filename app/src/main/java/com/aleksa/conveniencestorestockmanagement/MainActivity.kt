@@ -3,9 +3,10 @@ package com.aleksa.conveniencestorestockmanagement
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -13,12 +14,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) {
-            lifecycleScope.launch {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MainFragment())
-                    .commit()
-            }
-        }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNavigation.setupWithNavController(navController)
     }
 }

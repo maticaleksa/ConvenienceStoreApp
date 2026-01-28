@@ -1,4 +1,4 @@
-package com.aleksa.conveniencestorestockmanagement
+package com.aleksa.conveniencestorestockmanagement.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.domain.ProductRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
