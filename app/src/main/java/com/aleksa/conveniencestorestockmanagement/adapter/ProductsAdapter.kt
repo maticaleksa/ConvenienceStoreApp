@@ -26,11 +26,13 @@ class ProductsAdapter(
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameView: TextView = itemView.findViewById(R.id.product_name)
+        private val categoryView: TextView = itemView.findViewById(R.id.product_category)
         private val stockView: TextView = itemView.findViewById(R.id.product_stock)
         private val priceView: TextView = itemView.findViewById(R.id.product_price)
 
         fun bind(product: Product, onItemClick: (Product) -> Unit) {
             nameView.text = product.name
+            categoryView.text = product.category.name
             stockView.text = itemView.context.resources.getQuantityString(
                 R.plurals.product_stock_format,
                 product.currentStockLevel,

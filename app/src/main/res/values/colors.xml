@@ -10,4 +10,6 @@
     <color name="bottom_nav_background">#FFFFFFFF</color>
     <color name="bottom_nav_item_selected">#FF6200EE</color>
     <color name="bottom_nav_item_unselected">#8A000000</color>
+    <color name="product_category_bg">#E6F4EA</color>
+    <color name="product_category_text">#1B5E20</color>
 </resources>
