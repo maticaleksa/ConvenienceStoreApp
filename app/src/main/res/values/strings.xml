@@ -29,6 +29,13 @@
     </plurals>
     <string name="product_barcode_format">Barcode: %1$s</string>
     <string name="product_min_stock_format">Minimum stock: %1$d</string>
+    <string name="empty_transactions">No transactions yet.</string>
+    <string name="transaction_type_restock">Restock</string>
+    <string name="transaction_type_sale">Sale</string>
+    <string name="transaction_product_format">Product: %1$s</string>
+    <string name="transaction_quantity_format">Quantity: %1$d</string>
+    <string name="transaction_date_format">Date: %1$s</string>
+    <string name="transaction_notes_format">Notes: %1$s</string>
     <string name="product_price_format">$%1$s</string>
     <string name="products_search_hint">Search products</string>
     <string name="products_filter">Filter products</string>

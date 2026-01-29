@@ -1,6 +1,6 @@
 package com.aleksa.domain.model
 
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 data class Transaction(
     val id: String,

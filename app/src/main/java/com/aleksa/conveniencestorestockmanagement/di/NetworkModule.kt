@@ -5,17 +5,23 @@ import com.aleksa.conveniencestorestockmanagement.domain.GreetingRepository
 import com.aleksa.data.repository.ProductRepositoryImpl
 import com.aleksa.data.repository.CategoryRepositoryImpl
 import com.aleksa.data.repository.SupplierRepositoryImpl
+import com.aleksa.data.repository.TransactionRepositoryImpl
 import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.SupplierRepository
+import com.aleksa.domain.TransactionRepository
 import com.aleksa.data.fake.fakeProductsDtoList
 import com.aleksa.data.fake.fakeSuppliersDtoList
+import com.aleksa.data.fake.fakeTransactionsDtoList
 import com.aleksa.data.remote.ProductDto
 import com.aleksa.data.remote.SupplierDto
+import com.aleksa.data.remote.TransactionDto
 import com.aleksa.data.source.NetworkProductRemoteDataSource
 import com.aleksa.data.source.NetworkSupplierRemoteDataSource
+import com.aleksa.data.source.NetworkTransactionRemoteDataSource
 import com.aleksa.data.source.ProductRemoteDataSource
 import com.aleksa.data.source.SupplierRemoteDataSource
+import com.aleksa.data.source.TransactionRemoteDataSource
 import com.aleksa.network.ErrorResponse
 import com.aleksa.network.NetworkExecutor
 import com.aleksa.network.NetworkResult
@@ -81,6 +87,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideTransactionRemoteDataSource(
+        dataSource: NetworkTransactionRemoteDataSource,
+    ): TransactionRemoteDataSource = dataSource
+
+    @Provides
+    @Singleton
     fun provideFakeNetworkExecutor(
         @ApplicationContext appContext: Context,
     ): FakeNetworkExecutor {
@@ -92,6 +104,8 @@ object NetworkModule {
         var productsJson = loadOrSeedProductsJson(storageFile, json)
         val suppliersFile = File(appContext.filesDir, "fake_suppliers.json")
         var suppliersJson = loadOrSeedSuppliersJson(suppliersFile, json)
+        val transactionsFile = File(appContext.filesDir, "fake_transactions.json")
+        var transactionsJson = loadOrSeedTransactionsJson(transactionsFile, json)
         val handlers: Map<String, (FakeRequest) -> NetworkResult<Any, ErrorResponse>> =
             mapOf(
                 "GET ${ApiPaths.PRODUCTS}" to { _: FakeRequest ->
@@ -160,6 +174,39 @@ object NetworkModule {
                     NetworkResult.Success(json.encodeToString(SupplierDto.serializer(), dto))
                 }
                 },
+                "GET ${ApiPaths.TRANSACTIONS}" to { _: FakeRequest ->
+                if (transactionsFile.exists()) {
+                    transactionsJson = transactionsFile.readText()
+                } else {
+                    transactionsJson = loadOrSeedTransactionsJson(transactionsFile, json)
+                }
+                Log.d(TAG, "GET ${ApiPaths.TRANSACTIONS} bytes=${transactionsJson.length}")
+                NetworkResult.Success(transactionsJson)
+                },
+                "POST ${ApiPaths.TRANSACTIONS}" to { request: FakeRequest ->
+                val body = request.bodyText
+                if (body == null) {
+                    Log.d(TAG, "POST ${ApiPaths.TRANSACTIONS} missing body")
+                    NetworkResult.Error(
+                        ErrorResponse(message = "Missing body"),
+                    )
+                } else {
+                    Log.d(TAG, "POST ${ApiPaths.TRANSACTIONS} bytes=${body.length}")
+                    val dto = json.decodeFromString(TransactionDto.serializer(), body)
+                    val list = json.decodeFromString(
+                        ListSerializer(TransactionDto.serializer()),
+                        transactionsJson,
+                    )
+                    val updated = list.filterNot { it.id == dto.id } + dto
+                    transactionsJson = json.encodeToString(
+                        ListSerializer(TransactionDto.serializer()),
+                        updated,
+                    )
+                    transactionsFile.writeText(transactionsJson)
+                    Log.d(TAG, "POST ${ApiPaths.TRANSACTIONS} persisted bytes=${transactionsJson.length}")
+                    NetworkResult.Success(json.encodeToString(TransactionDto.serializer(), dto))
+                }
+                },
             )
         return FakeNetworkExecutor(
             routes = mapOf(
@@ -199,6 +246,21 @@ object NetworkModule {
         return seeded
     }
 
+    private fun loadOrSeedTransactionsJson(
+        file: File,
+        json: Json,
+    ): String {
+        if (file.exists()) {
+            return file.readText()
+        }
+        val seeded = json.encodeToString(
+            ListSerializer(TransactionDto.serializer()),
+            fakeTransactionsDtoList,
+        )
+        file.writeText(seeded)
+        return seeded
+    }
+
     @Provides
     @Singleton
     fun provideNetworkExecutor(
@@ -233,4 +295,10 @@ abstract class RepositoryModule {
     abstract fun bindSupplierRepository(
         repository: SupplierRepositoryImpl,
     ): SupplierRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTransactionRepository(
+        repository: TransactionRepositoryImpl,
+    ): TransactionRepository
 }
