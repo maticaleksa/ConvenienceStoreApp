@@ -3,6 +3,8 @@
     <string name="main_greeting">Hello Android!</string>
     <string name="main_greeting_loading">Loading greeting...</string>
     <string name="nav_dashboard">Dashboard</string>
+    <string name="dashboard_low_stock_title">Low stock</string>
+    <string name="dashboard_low_stock_empty">No low stock products.</string>
     <string name="nav_products">Products</string>
     <string name="nav_suppliers">Suppliers</string>
     <string name="nav_transactions">Transactions</string>
