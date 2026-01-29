@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.domain.model.Supplier
 
-class SuppliersAdapter :
-    ListAdapter<Supplier, SuppliersAdapter.SupplierViewHolder>(SupplierDiffCallback) {
+class SuppliersAdapter(
+    private val onItemClick: (Supplier) -> Unit = {}
+) : ListAdapter<Supplier, SuppliersAdapter.SupplierViewHolder>(SupplierDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SupplierViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,7 +21,7 @@ class SuppliersAdapter :
     }
 
     override fun onBindViewHolder(holder: SupplierViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onItemClick)
     }
 
     class SupplierViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,12 +31,13 @@ class SuppliersAdapter :
         private val emailView: TextView = itemView.findViewById(R.id.supplier_email)
         private val addressView: TextView = itemView.findViewById(R.id.supplier_address)
 
-        fun bind(supplier: Supplier) {
+        fun bind(supplier: Supplier, onItemClick: (Supplier) -> Unit) {
             nameView.text = supplier.name
             contactView.text = supplier.contactPerson
             phoneView.text = supplier.phone
             emailView.text = supplier.email
             addressView.text = supplier.address
+            itemView.setOnClickListener { onItemClick(supplier) }
         }
     }
 

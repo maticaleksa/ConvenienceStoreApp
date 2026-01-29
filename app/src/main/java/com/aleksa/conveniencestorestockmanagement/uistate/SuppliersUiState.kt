@@ -7,4 +7,5 @@ data class SuppliersUiState(
     val searchQuery: String = "",
     val isSearchActive: Boolean = false,
     val isEmpty: Boolean = true,
+    val isSyncing: Boolean = false,
 )

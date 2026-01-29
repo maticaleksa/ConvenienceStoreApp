@@ -31,10 +31,16 @@ interface SupplierDao {
     suspend fun getAllIds(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun upsertAll(suppliers: List<SupplierEntity>)
+    suspend fun insertAll(suppliers: List<SupplierEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun upsert(supplier: SupplierEntity)
+    suspend fun insert(supplier: SupplierEntity)
+
+    @androidx.room.Update
+    suspend fun updateAll(suppliers: List<SupplierEntity>)
+
+    @androidx.room.Update
+    suspend fun update(supplier: SupplierEntity)
 
     @Query("DELETE FROM suppliers WHERE id IN (:ids)")
     suspend fun deleteByIds(ids: Collection<String>)

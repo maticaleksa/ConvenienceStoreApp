@@ -15,6 +15,14 @@
     <string name="empty_suppliers_search">No results for "%1$s".</string>
     <string name="suppliers_search_hint">Search suppliers</string>
     <string name="suppliers_clear_search">Clear search</string>
+    <string name="supplier_add_title">Add supplier</string>
+    <string name="supplier_edit_title">Edit supplier</string>
+    <string name="supplier_save">Save supplier</string>
+    <string name="supplier_name">Supplier name</string>
+    <string name="supplier_contact_person">Contact person</string>
+    <string name="supplier_phone">Phone</string>
+    <string name="supplier_email">Email</string>
+    <string name="supplier_address">Address</string>
     <plurals name="product_stock_format">
         <item quantity="one">%1$d in stock</item>
         <item quantity="other">%1$d in stock</item>

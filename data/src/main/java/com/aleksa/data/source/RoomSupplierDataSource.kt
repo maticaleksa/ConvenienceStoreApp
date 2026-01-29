@@ -18,9 +18,15 @@ class RoomSupplierDataSource @Inject constructor(
     override suspend fun getAllIds(): List<String> = supplierDao.getAllIds()
 
     override suspend fun upsertAll(suppliers: List<SupplierEntity>) =
-        supplierDao.upsertAll(suppliers)
+        run {
+            supplierDao.insertAll(suppliers)
+            supplierDao.updateAll(suppliers)
+        }
 
-    override suspend fun upsert(supplier: SupplierEntity) = supplierDao.upsert(supplier)
+    override suspend fun upsert(supplier: SupplierEntity) {
+        supplierDao.insert(supplier)
+        supplierDao.update(supplier)
+    }
 
     override suspend fun deleteByIds(ids: Collection<String>) = supplierDao.deleteByIds(ids)
 }

@@ -16,19 +16,28 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
+import com.aleksa.core.arch.event.DataCommandBus
+import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.data.repository.SuppliersSyncChannelKey
+import com.aleksa.domain.event.SupplierDataCommand.RefreshAll
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SuppliersViewModel @Inject constructor(
     private val supplierRepository: SupplierRepository,
+    private val dataCommandBus: DataCommandBus,
+    syncCoordinator: SyncCoordinator,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SuppliersUiState())
     val uiState: StateFlow<SuppliersUiState> = _uiState.asStateFlow()
     private val searchQuery = MutableStateFlow("")
+    private val syncChannel = syncCoordinator.getOrCreateChannel(SuppliersSyncChannelKey)
 
     init {
         observeSuppliers()
         observeSearchQuery()
+        observeSyncStatus()
     }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -49,11 +58,25 @@ class SuppliersViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    private fun observeSyncStatus() {
+        syncChannel.isActive
+            .onEach { isSyncing ->
+                _uiState.update { it.copy(isSyncing = isSyncing) }
+            }
+            .launchIn(viewModelScope)
+    }
+
     fun onSearchQueryChanged(query: String) {
         searchQuery.value = query
     }
 
     fun clearSearch() {
         searchQuery.value = ""
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            dataCommandBus.emit(RefreshAll)
+        }
     }
 }

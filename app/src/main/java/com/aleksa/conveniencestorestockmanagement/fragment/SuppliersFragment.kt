@@ -10,8 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.SuppliersAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SuppliersViewModel
@@ -26,10 +28,21 @@ class SuppliersFragment : Fragment(R.layout.fragment_suppliers) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<RecyclerView>(R.id.suppliers_list)
+        val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.suppliers_swipe_refresh)
         val emptyView = view.findViewById<TextView>(R.id.suppliers_empty)
         val searchInput = view.findViewById<TextInputEditText>(R.id.suppliers_search)
         val clearButton = view.findViewById<AppCompatImageButton>(R.id.suppliers_clear_button)
-        val adapter = SuppliersAdapter()
+        val adapter = SuppliersAdapter { supplier ->
+            val args = Bundle().apply {
+                putString("supplierId", supplier.id)
+                putString("supplierName", supplier.name)
+                putString("supplierContactPerson", supplier.contactPerson)
+                putString("supplierPhone", supplier.phone)
+                putString("supplierEmail", supplier.email)
+                putString("supplierAddress", supplier.address)
+            }
+            findNavController().navigate(R.id.supplierEditFragment, args)
+        }
         listView.layoutManager = LinearLayoutManager(requireContext())
         listView.adapter = adapter
 
@@ -39,6 +52,9 @@ class SuppliersFragment : Fragment(R.layout.fragment_suppliers) {
         clearButton.setOnClickListener {
             viewModel.clearSearch()
             searchInput.setText("")
+        }
+        swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -54,6 +70,7 @@ class SuppliersFragment : Fragment(R.layout.fragment_suppliers) {
                     } else {
                         getString(R.string.empty_suppliers)
                     }
+                    swipeRefresh.isRefreshing = state.isSyncing
                     emptyView.visibility =
                         if (state.items.isEmpty()) View.VISIBLE else View.GONE
                 }

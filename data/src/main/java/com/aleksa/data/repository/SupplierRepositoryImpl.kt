@@ -6,25 +6,43 @@ import com.aleksa.data.database.toEntity
 import com.aleksa.data.remote.toDto
 import com.aleksa.data.source.SupplierDataSource
 import com.aleksa.data.source.SupplierRemoteDataSource
+import com.aleksa.domain.event.SupplierDataCommand
+import com.aleksa.domain.event.SupplierDataCommand.RefreshAll
 import com.aleksa.domain.SupplierRepository
 import com.aleksa.domain.model.Supplier
 import com.aleksa.network.NetworkResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.aleksa.core.arch.coroutines.AppScope
+import com.aleksa.core.arch.event.DataCommandBus
+import com.aleksa.core.arch.sync.SyncCoordinator
 
 @Singleton
 class SupplierRepositoryImpl @Inject constructor(
     private val localDataSource: SupplierDataSource,
     private val remoteDataSource: SupplierRemoteDataSource,
+    private val dataCommandBus: DataCommandBus,
+    syncCoordinator: SyncCoordinator,
     @AppScope private val coroutineScope: CoroutineScope,
 ) : SupplierRepository {
+    val syncChannel = syncCoordinator.getOrCreateChannel(SuppliersSyncChannelKey)
 
     init {
+        coroutineScope.launch {
+            dataCommandBus.events
+                .filterIsInstance<SupplierDataCommand>()
+                .collectLatest { event ->
+                    when (event) {
+                        RefreshAll -> refreshAllSuppliers()
+                    }
+                }
+        }
         coroutineScope.launch {
             refreshAllSuppliers()
         }
@@ -58,15 +76,17 @@ class SupplierRepositoryImpl @Inject constructor(
     }
 
     private suspend fun refreshAllSuppliers() {
-        val networkResult = remoteDataSource.fetchAll()
-        when (networkResult) {
-            is NetworkResult.Success -> {
-                val fresh = networkResult.data.map { it.toEntity() }
-                localDataSource.upsertAll(fresh)
-                removeSuppliersThatNoLongerExistOnRemote(fresh)
-            }
-            is NetworkResult.Error -> {
-                // ignore for now
+        syncChannel.execute {
+            val networkResult = remoteDataSource.fetchAll()
+            when (networkResult) {
+                is NetworkResult.Success -> {
+                    val fresh = networkResult.data.map { it.toEntity() }
+                    localDataSource.upsertAll(fresh)
+                    removeSuppliersThatNoLongerExistOnRemote(fresh)
+                }
+                is NetworkResult.Error -> {
+                    // ignore for now
+                }
             }
         }
     }

@@ -21,7 +21,11 @@
     <fragment
         android:id="@+id/suppliersFragment"
         android:name="com.aleksa.conveniencestorestockmanagement.fragment.SuppliersFragment"
-        android:label="@string/nav_suppliers" />
+        android:label="@string/nav_suppliers">
+        <action
+            android:id="@+id/action_suppliersFragment_to_supplierEditFragment"
+            app:destination="@id/supplierEditFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/transactionsFragment"
@@ -95,6 +99,36 @@
             app:nullable="true" />
         <argument
             android:name="productSupplierAddress"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/supplierEditFragment"
+        android:name="com.aleksa.conveniencestorestockmanagement.fragment.SupplierEditFragment"
+        android:label="@string/supplier_edit_title">
+        <argument
+            android:name="supplierId"
+            app:argType="string"
+            app:nullable="false" />
+        <argument
+            android:name="supplierName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="supplierContactPerson"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="supplierPhone"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="supplierEmail"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="supplierAddress"
             app:argType="string"
             app:nullable="true" />
     </fragment>
