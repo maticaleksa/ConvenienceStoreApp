@@ -10,9 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.app.AlertDialog
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductEditViewModel
+import com.aleksa.domain.model.Category
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +26,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
     private companion object {
         private const val TAG = "ProductEditFragment"
     }
+    private var categories: List<Category> = emptyList()
     private val viewModel: ProductEditViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,6 +37,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
             view.findViewById<TextInputEditText>(R.id.product_edit_description)
         val priceInput = view.findViewById<TextInputEditText>(R.id.product_edit_price)
         val barcodeInput = view.findViewById<TextInputEditText>(R.id.product_edit_barcode)
+        val categoryInput = view.findViewById<TextInputEditText>(R.id.product_edit_category)
         val currentStockInput =
             view.findViewById<TextInputEditText>(R.id.product_edit_current_stock)
         val minimumStockInput =
@@ -52,6 +56,9 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         }
         priceInput.doAfterTextChanged { viewModel.onPriceChanged(it?.toString().orEmpty()) }
         barcodeInput.doAfterTextChanged { viewModel.onBarcodeChanged(it?.toString().orEmpty()) }
+        categoryInput.isFocusable = false
+        categoryInput.isClickable = true
+        categoryInput.setOnClickListener { showCategoryDialog() }
         currentStockInput.doAfterTextChanged {
             viewModel.onCurrentStockChanged(it?.toString().orEmpty())
         }
@@ -66,6 +73,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    categories = state.categories
                     toolbar.setTitle(
                         if (state.mode == ProductEditUiState.Mode.ADD) {
                             R.string.product_add_title
@@ -85,6 +93,9 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
                     if (barcodeInput.text?.toString() != state.barcode) {
                         barcodeInput.setText(state.barcode)
                     }
+                    if (categoryInput.text?.toString() != state.categoryName) {
+                        categoryInput.setText(state.categoryName)
+                    }
                     if (currentStockInput.text?.toString() != state.currentStockLevel) {
                         currentStockInput.setText(state.currentStockLevel)
                     }
@@ -102,5 +113,17 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
                 }
             }
         }
+    }
+
+    private fun showCategoryDialog() {
+        if (categories.isEmpty()) return
+        val items = categories.map { it.name }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.product_category_select_title)
+            .setItems(items) { _, which ->
+                viewModel.onCategorySelected(categories[which])
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 }

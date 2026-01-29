@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.Money
+import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Supplier
@@ -15,7 +16,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.UUID
@@ -25,6 +28,7 @@ import android.util.Log
 class ProductEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
+    private val categoryRepository: CategoryRepository,
 ) : ViewModel() {
     private companion object {
         private const val TAG = "ProductEditViewModel"
@@ -60,6 +64,8 @@ class ProductEditViewModel @Inject constructor(
             description = productDescription.orEmpty(),
             price = productPrice.orEmpty(),
             barcode = productBarcode.orEmpty(),
+            categoryId = productCategoryId,
+            categoryName = productCategoryName.orEmpty(),
             currentStockLevel = productCurrentStock.orEmpty(),
             minimumStockLevel = productMinimumStock.orEmpty()
         )
@@ -82,6 +88,12 @@ class ProductEditViewModel @Inject constructor(
         _uiState.update { it.copy(barcode = value) }
     }
 
+    fun onCategorySelected(category: Category) {
+        _uiState.update {
+            it.copy(categoryId = category.id, categoryName = category.name)
+        }
+    }
+
     fun onCurrentStockChanged(value: String) {
         _uiState.update { it.copy(currentStockLevel = value) }
     }
@@ -95,8 +107,8 @@ class ProductEditViewModel @Inject constructor(
         Log.d(TAG, "onSaveClicked: id=${productId} name=${state.name}")
         viewModelScope.launch {
             val resolvedCategory = Category(
-                id = productCategoryId ?: "uncategorized",
-                name = productCategoryName ?: "Uncategorized",
+                id = state.categoryId ?: productCategoryId ?: "uncategorized",
+                name = state.categoryName.ifBlank { productCategoryName ?: "Uncategorized" },
             )
             val resolvedSupplier = Supplier(
                 id = productSupplierId ?: "unknown_supplier",
@@ -120,5 +132,13 @@ class ProductEditViewModel @Inject constructor(
             productRepository.upsert(product)
             _saveEvents.tryEmit(Unit)
         }
+    }
+
+    init {
+        categoryRepository.observeAll()
+            .onEach { categories ->
+                _uiState.update { it.copy(categories = categories) }
+            }
+            .launchIn(viewModelScope)
     }
 }

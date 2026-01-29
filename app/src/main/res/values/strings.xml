@@ -28,6 +28,8 @@
     <string name="product_description">Description</string>
     <string name="product_price">Price</string>
     <string name="product_barcode">Barcode</string>
+    <string name="product_category">Category</string>
+    <string name="product_category_select_title">Select category</string>
     <string name="product_current_stock">Current stock level</string>
     <string name="product_minimum_stock">Minimum stock level</string>
 </resources>
