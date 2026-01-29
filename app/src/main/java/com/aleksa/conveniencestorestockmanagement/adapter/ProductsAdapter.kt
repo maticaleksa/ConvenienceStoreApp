@@ -26,13 +26,19 @@ class ProductsAdapter(
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameView: TextView = itemView.findViewById(R.id.product_name)
+        private val descriptionView: TextView = itemView.findViewById(R.id.product_description)
         private val categoryView: TextView = itemView.findViewById(R.id.product_category)
+        private val supplierView: TextView = itemView.findViewById(R.id.product_supplier)
         private val stockView: TextView = itemView.findViewById(R.id.product_stock)
         private val priceView: TextView = itemView.findViewById(R.id.product_price)
+        private val barcodeView: TextView = itemView.findViewById(R.id.product_barcode)
+        private val minStockView: TextView = itemView.findViewById(R.id.product_min_stock)
 
         fun bind(product: Product, onItemClick: (Product) -> Unit) {
             nameView.text = product.name
+            descriptionView.text = product.description
             categoryView.text = product.category.name
+            supplierView.text = product.supplier.name
             stockView.text = itemView.context.resources.getQuantityString(
                 R.plurals.product_stock_format,
                 product.currentStockLevel,
@@ -41,6 +47,14 @@ class ProductsAdapter(
             priceView.text = itemView.context.getString(
                 R.string.product_price_format,
                 product.price.toDecimalString()
+            )
+            barcodeView.text = itemView.context.getString(
+                R.string.product_barcode_format,
+                product.barcode
+            )
+            minStockView.text = itemView.context.getString(
+                R.string.product_min_stock_format,
+                product.minimumStockLevel
             )
             itemView.setOnClickListener { onItemClick(product) }
         }

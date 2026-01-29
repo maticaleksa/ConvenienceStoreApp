@@ -12,4 +12,6 @@
     <color name="bottom_nav_item_unselected">#8A000000</color>
     <color name="product_category_bg">#E6F4EA</color>
     <color name="product_category_text">#1B5E20</color>
+    <color name="product_supplier_bg">#E8F0FE</color>
+    <color name="product_supplier_text">#1A237E</color>
 </resources>

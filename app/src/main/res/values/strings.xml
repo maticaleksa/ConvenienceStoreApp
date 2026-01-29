@@ -11,10 +11,16 @@
     <string name="nav_stock">Stock</string>
     <string name="empty_products">No products yet.</string>
     <string name="empty_products_search">No results for "%1$s".</string>
+    <string name="empty_suppliers">No suppliers yet.</string>
+    <string name="empty_suppliers_search">No results for "%1$s".</string>
+    <string name="suppliers_search_hint">Search suppliers</string>
+    <string name="suppliers_clear_search">Clear search</string>
     <plurals name="product_stock_format">
         <item quantity="one">%1$d in stock</item>
         <item quantity="other">%1$d in stock</item>
     </plurals>
+    <string name="product_barcode_format">Barcode: %1$s</string>
+    <string name="product_min_stock_format">Minimum stock: %1$d</string>
     <string name="product_price_format">$%1$s</string>
     <string name="products_search_hint">Search products</string>
     <string name="products_filter">Filter products</string>
@@ -32,6 +38,8 @@
     <string name="product_barcode">Barcode</string>
     <string name="product_category">Category</string>
     <string name="product_category_select_title">Select category</string>
+    <string name="product_supplier">Supplier</string>
+    <string name="product_supplier_select_title">Select supplier</string>
     <string name="product_current_stock">Current stock level</string>
     <string name="product_minimum_stock">Minimum stock level</string>
 </resources>

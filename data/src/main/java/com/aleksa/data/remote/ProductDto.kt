@@ -1,7 +1,6 @@
 package com.aleksa.data.remote
 
 import com.aleksa.domain.model.Product
-import com.aleksa.domain.model.Supplier
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,7 +11,7 @@ data class ProductDto(
     val price: Double,
     val category: String,
     val barcode: String,
-    val supplier: SupplierDto,
+    val supplierId: String,
     val currentStockLevel: Int,
     val minimumStockLevel: Int,
 )
@@ -34,16 +33,7 @@ fun Product.toDto(): ProductDto = ProductDto(
     price = price.minor / 100.0,
     category = category.name,
     barcode = barcode,
-    supplier = supplier.toDto(),
+    supplierId = supplier.id,
     currentStockLevel = currentStockLevel,
     minimumStockLevel = minimumStockLevel,
-)
-
-private fun Supplier.toDto(): SupplierDto = SupplierDto(
-    id = id,
-    name = name,
-    contactPerson = contactPerson,
-    phone = phone,
-    email = email,
-    address = address,
 )

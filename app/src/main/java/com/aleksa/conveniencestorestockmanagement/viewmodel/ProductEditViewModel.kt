@@ -10,6 +10,7 @@ import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Supplier
+import com.aleksa.domain.SupplierRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,6 +30,7 @@ class ProductEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
     private val categoryRepository: CategoryRepository,
+    private val supplierRepository: SupplierRepository,
 ) : ViewModel() {
     private companion object {
         private const val TAG = "ProductEditViewModel"
@@ -66,6 +68,8 @@ class ProductEditViewModel @Inject constructor(
             barcode = productBarcode.orEmpty(),
             categoryId = productCategoryId,
             categoryName = productCategoryName.orEmpty(),
+            supplierId = productSupplierId,
+            supplierName = productSupplierName.orEmpty(),
             currentStockLevel = productCurrentStock.orEmpty(),
             minimumStockLevel = productMinimumStock.orEmpty()
         )
@@ -94,6 +98,12 @@ class ProductEditViewModel @Inject constructor(
         }
     }
 
+    fun onSupplierSelected(supplier: Supplier) {
+        _uiState.update {
+            it.copy(supplierId = supplier.id, supplierName = supplier.name)
+        }
+    }
+
     fun onCurrentStockChanged(value: String) {
         _uiState.update { it.copy(currentStockLevel = value) }
     }
@@ -111,8 +121,8 @@ class ProductEditViewModel @Inject constructor(
                 name = state.categoryName.ifBlank { productCategoryName ?: "Uncategorized" },
             )
             val resolvedSupplier = Supplier(
-                id = productSupplierId ?: "unknown_supplier",
-                name = productSupplierName ?: "Unknown supplier",
+                id = state.supplierId ?: productSupplierId ?: "unknown_supplier",
+                name = state.supplierName.ifBlank { productSupplierName ?: "Unknown supplier" },
                 contactPerson = productSupplierContactPerson ?: "",
                 phone = productSupplierPhone ?: "",
                 email = productSupplierEmail ?: "",
@@ -138,6 +148,11 @@ class ProductEditViewModel @Inject constructor(
         categoryRepository.observeAll()
             .onEach { categories ->
                 _uiState.update { it.copy(categories = categories) }
+            }
+            .launchIn(viewModelScope)
+        supplierRepository.observeAll()
+            .onEach { suppliers ->
+                _uiState.update { it.copy(suppliers = suppliers) }
             }
             .launchIn(viewModelScope)
     }

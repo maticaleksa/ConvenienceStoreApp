@@ -1,29 +1,9 @@
 package com.aleksa.data.fake
 
 import com.aleksa.data.remote.ProductDto
-import com.aleksa.data.remote.SupplierDto
 import com.aleksa.domain.Money
 import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Product
-import com.aleksa.domain.model.Supplier
-
-val supplierA = Supplier(
-    id = "supplier-1",
-    name = "Acme Supplies",
-    contactPerson = "John Doe",
-    phone = "+123456789",
-    email = "contact@acme.com",
-    address = "123 Industrial St",
-)
-
-val supplierB = Supplier(
-    id = "supplier-2",
-    name = "FreshGoods Ltd",
-    contactPerson = "Jane Smith",
-    phone = "+987654321",
-    email = "sales@freshgoods.com",
-    address = "45 Market Ave",
-)
 
 val categoryDairy = Category(id = "dairy", name = "Dairy")
 val categoryBakery = Category(id = "bakery", name = "Bakery")
@@ -121,14 +101,7 @@ val fakeProductsDtoList =
             price = it.price.toDecimalString().toDouble(),
             category = it.category.name,
             barcode = it.barcode,
-            supplier = SupplierDto(
-                id = it.supplier.id,
-                name = it.supplier.name,
-                contactPerson = it.supplier.contactPerson,
-                phone = it.supplier.phone,
-                email = it.supplier.email,
-                address = it.supplier.address,
-            ),
+            supplierId = it.supplier.id,
             currentStockLevel = it.currentStockLevel,
             minimumStockLevel = it.minimumStockLevel,
         )

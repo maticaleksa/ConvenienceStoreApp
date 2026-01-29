@@ -4,12 +4,18 @@ import com.aleksa.conveniencestorestockmanagement.data.NetworkGreetingRepository
 import com.aleksa.conveniencestorestockmanagement.domain.GreetingRepository
 import com.aleksa.data.repository.ProductRepositoryImpl
 import com.aleksa.data.repository.CategoryRepositoryImpl
+import com.aleksa.data.repository.SupplierRepositoryImpl
 import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.ProductRepository
+import com.aleksa.domain.SupplierRepository
 import com.aleksa.data.fake.fakeProductsDtoList
+import com.aleksa.data.fake.fakeSuppliersDtoList
 import com.aleksa.data.remote.ProductDto
+import com.aleksa.data.remote.SupplierDto
 import com.aleksa.data.source.NetworkProductRemoteDataSource
+import com.aleksa.data.source.NetworkSupplierRemoteDataSource
 import com.aleksa.data.source.ProductRemoteDataSource
+import com.aleksa.data.source.SupplierRemoteDataSource
 import com.aleksa.network.ErrorResponse
 import com.aleksa.network.NetworkExecutor
 import com.aleksa.network.NetworkResult
@@ -69,6 +75,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideSupplierRemoteDataSource(
+        dataSource: NetworkSupplierRemoteDataSource,
+    ): SupplierRemoteDataSource = dataSource
+
+    @Provides
+    @Singleton
     fun provideFakeNetworkExecutor(
         @ApplicationContext appContext: Context,
     ): FakeNetworkExecutor {
@@ -78,6 +90,8 @@ object NetworkModule {
         }
         val storageFile = File(appContext.filesDir, "fake_products.json")
         var productsJson = loadOrSeedProductsJson(storageFile, json)
+        val suppliersFile = File(appContext.filesDir, "fake_suppliers.json")
+        var suppliersJson = loadOrSeedSuppliersJson(suppliersFile, json)
         val handlers: Map<String, (FakeRequest) -> NetworkResult<Any, ErrorResponse>> =
             mapOf(
                 "GET ${ApiPaths.PRODUCTS}" to { _: FakeRequest ->
@@ -113,6 +127,39 @@ object NetworkModule {
                     NetworkResult.Success(json.encodeToString(ProductDto.serializer(), dto))
                 }
                 },
+                "GET ${ApiPaths.SUPPLIERS}" to { _: FakeRequest ->
+                if (suppliersFile.exists()) {
+                    suppliersJson = suppliersFile.readText()
+                } else {
+                    suppliersJson = loadOrSeedSuppliersJson(suppliersFile, json)
+                }
+                Log.d(TAG, "GET ${ApiPaths.SUPPLIERS} bytes=${suppliersJson.length}")
+                NetworkResult.Success(suppliersJson)
+                },
+                "POST ${ApiPaths.SUPPLIERS}" to { request: FakeRequest ->
+                val body = request.bodyText
+                if (body == null) {
+                    Log.d(TAG, "POST ${ApiPaths.SUPPLIERS} missing body")
+                    NetworkResult.Error(
+                        ErrorResponse(message = "Missing body"),
+                    )
+                } else {
+                    Log.d(TAG, "POST ${ApiPaths.SUPPLIERS} bytes=${body.length}")
+                    val dto = json.decodeFromString(SupplierDto.serializer(), body)
+                    val list = json.decodeFromString(
+                        ListSerializer(SupplierDto.serializer()),
+                        suppliersJson,
+                    )
+                    val updated = list.filterNot { it.id == dto.id } + dto
+                    suppliersJson = json.encodeToString(
+                        ListSerializer(SupplierDto.serializer()),
+                        updated,
+                    )
+                    suppliersFile.writeText(suppliersJson)
+                    Log.d(TAG, "POST ${ApiPaths.SUPPLIERS} persisted bytes=${suppliersJson.length}")
+                    NetworkResult.Success(json.encodeToString(SupplierDto.serializer(), dto))
+                }
+                },
             )
         return FakeNetworkExecutor(
             routes = mapOf(
@@ -132,6 +179,21 @@ object NetworkModule {
         val seeded = json.encodeToString(
             ListSerializer(ProductDto.serializer()),
             fakeProductsDtoList,
+        )
+        file.writeText(seeded)
+        return seeded
+    }
+
+    private fun loadOrSeedSuppliersJson(
+        file: File,
+        json: Json,
+    ): String {
+        if (file.exists()) {
+            return file.readText()
+        }
+        val seeded = json.encodeToString(
+            ListSerializer(SupplierDto.serializer()),
+            fakeSuppliersDtoList,
         )
         file.writeText(seeded)
         return seeded
@@ -165,4 +227,10 @@ abstract class RepositoryModule {
     abstract fun bindCategoryRepository(
         repository: CategoryRepositoryImpl,
     ): CategoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSupplierRepository(
+        repository: SupplierRepositoryImpl,
+    ): SupplierRepository
 }

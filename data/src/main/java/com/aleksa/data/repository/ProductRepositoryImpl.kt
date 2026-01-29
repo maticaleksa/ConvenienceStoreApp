@@ -7,9 +7,12 @@ import com.aleksa.data.database.toCategoryEntity
 import com.aleksa.data.database.normalizeCategoryId
 import com.aleksa.data.database.ProductEntity
 import com.aleksa.data.database.toEntity as categoryToEntity
+import com.aleksa.data.database.toEntity as supplierToEntity
 import com.aleksa.data.source.ProductDataSource
 import com.aleksa.data.source.CategoryDataSource
 import com.aleksa.data.source.ProductRemoteDataSource
+import com.aleksa.data.source.SupplierDataSource
+import com.aleksa.data.source.SupplierRemoteDataSource
 import com.aleksa.data.remote.toDto
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.error.ProductSyncError
@@ -33,7 +36,9 @@ import javax.inject.Singleton
 class ProductRepositoryImpl @Inject constructor(
     private val localDataSource: ProductDataSource,
     private val categoryDataSource: CategoryDataSource,
+    private val supplierDataSource: SupplierDataSource,
     private val remoteDataSource: ProductRemoteDataSource,
+    private val supplierRemoteDataSource: SupplierRemoteDataSource,
     private val dataCommandBus: DataCommandBus,
     syncCoordinator: SyncCoordinator,
     @AppScope private val coroutineScope: CoroutineScope,
@@ -95,6 +100,12 @@ class ProductRepositoryImpl @Inject constructor(
             Log.e(TAG, "upsert: category upsert failed categoryId=${safeCategory.id}", e)
             throw e
         }
+        try {
+            supplierDataSource.upsert(product.supplier.supplierToEntity())
+        } catch (e: Exception) {
+            Log.e(TAG, "upsert: supplier upsert failed supplierId=${product.supplier.id}", e)
+            throw e
+        }
         val remoteResult = remoteDataSource.upsert(product.copy(category = safeCategory).toDto())
         when (remoteResult) {
             is NetworkResult.Success -> {
@@ -136,10 +147,25 @@ class ProductRepositoryImpl @Inject constructor(
 
     private suspend fun refreshAllProducts() {
         syncChannel.execute {
+            var hasSuppliers = false
+            when (val suppliersResult = supplierRemoteDataSource.fetchAll()) {
+                is NetworkResult.Success -> {
+                    supplierDataSource.upsertAll(suppliersResult.data.map { it.toEntity() })
+                    hasSuppliers = suppliersResult.data.isNotEmpty()
+                }
+                is NetworkResult.Error -> {
+                    Log.d(TAG, "refresh: suppliers fetch failed ${suppliersResult.error.message}")
+                    hasSuppliers = supplierDataSource.getAllIds().isNotEmpty()
+                }
+            }
             val networkResult = remoteDataSource.fetchAll()
 
             when (networkResult) {
                 is NetworkResult.Success -> {
+                    if (!hasSuppliers) {
+                        Log.d(TAG, "refresh: skipped products sync due to empty suppliers")
+                        return@execute
+                    }
                     val categories = networkResult.data
                         .map { it.toCategoryEntity() }
                         .distinctBy { it.id }

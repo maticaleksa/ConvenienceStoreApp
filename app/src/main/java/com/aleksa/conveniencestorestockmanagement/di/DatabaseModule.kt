@@ -6,11 +6,14 @@ import com.aleksa.core.arch.event.DefaultDataCommandBus
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.data.database.CategoryDao
 import com.aleksa.data.database.ProductDao
+import com.aleksa.data.database.SupplierDao
 import com.aleksa.data.database.StockManagementDatabase
 import com.aleksa.data.source.CategoryDataSource
 import com.aleksa.data.source.ProductDataSource
+import com.aleksa.data.source.SupplierDataSource
 import com.aleksa.data.source.RoomCategoryDataSource
 import com.aleksa.data.source.RoomProductDataSource
+import com.aleksa.data.source.RoomSupplierDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +48,11 @@ object DatabaseModule {
     ): CategoryDao = database.categoryDao()
 
     @Provides
+    fun provideSupplierDao(
+        database: StockManagementDatabase,
+    ): SupplierDao = database.supplierDao()
+
+    @Provides
     fun provideProductDataSource(
         dataSource: RoomProductDataSource,
     ): ProductDataSource = dataSource
@@ -53,6 +61,11 @@ object DatabaseModule {
     fun provideCategoryDataSource(
         dataSource: RoomCategoryDataSource,
     ): CategoryDataSource = dataSource
+
+    @Provides
+    fun provideSupplierDataSource(
+        dataSource: RoomSupplierDataSource,
+    ): SupplierDataSource = dataSource
 
     @Provides
     @Singleton

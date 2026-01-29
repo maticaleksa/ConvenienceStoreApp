@@ -2,27 +2,28 @@ package com.aleksa.data.source
 
 import com.aleksa.data.database.ProductDao
 import com.aleksa.data.database.ProductEntity
-import com.aleksa.data.database.ProductWithCategory
+import com.aleksa.data.database.ProductWithCategorySupplier
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RoomProductDataSource @Inject constructor(
     private val productDao: ProductDao,
 ) : ProductDataSource {
-    override suspend fun getAll(): List<ProductWithCategory> = productDao.getAll()
+    override suspend fun getAll(): List<ProductWithCategorySupplier> = productDao.getAll()
 
-    override fun getAllFlow(): Flow<List<ProductWithCategory>> = productDao.getAllFlow()
+    override fun getAllFlow(): Flow<List<ProductWithCategorySupplier>> = productDao.getAllFlow()
 
-    override fun searchFlow(query: String): Flow<List<ProductWithCategory>> =
+    override fun searchFlow(query: String): Flow<List<ProductWithCategorySupplier>> =
         productDao.searchFlow(query)
 
     override suspend fun count(): Int = productDao.count()
 
     override suspend fun getAllIds(): List<String> = productDao.getAllIds()
 
-    override suspend fun getById(id: String): ProductWithCategory? = productDao.getById(id)
+    override suspend fun getById(id: String): ProductWithCategorySupplier? = productDao.getById(id)
 
-    override fun getByIdFlow(id: String): Flow<ProductWithCategory?> = productDao.getByIdFlow(id)
+    override fun getByIdFlow(id: String): Flow<ProductWithCategorySupplier?> =
+        productDao.getByIdFlow(id)
 
     override suspend fun upsertAll(products: List<ProductEntity>) = productDao.upsertAll(products)
 
@@ -30,7 +31,7 @@ class RoomProductDataSource @Inject constructor(
 
     override suspend fun upsert(product: ProductEntity) = productDao.upsert(product)
 
-    override suspend fun upsertAndGet(product: ProductEntity): ProductWithCategory? {
+    override suspend fun upsertAndGet(product: ProductEntity): ProductWithCategorySupplier? {
         productDao.upsert(product)
         return productDao.getById(product.id)
     }

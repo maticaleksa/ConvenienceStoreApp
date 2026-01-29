@@ -15,6 +15,7 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductEditViewModel
 import com.aleksa.domain.model.Category
+import com.aleksa.domain.model.Supplier
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +28,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         private const val TAG = "ProductEditFragment"
     }
     private var categories: List<Category> = emptyList()
+    private var suppliers: List<Supplier> = emptyList()
     private val viewModel: ProductEditViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         val priceInput = view.findViewById<TextInputEditText>(R.id.product_edit_price)
         val barcodeInput = view.findViewById<TextInputEditText>(R.id.product_edit_barcode)
         val categoryInput = view.findViewById<TextInputEditText>(R.id.product_edit_category)
+        val supplierInput = view.findViewById<TextInputEditText>(R.id.product_edit_supplier)
         val currentStockInput =
             view.findViewById<TextInputEditText>(R.id.product_edit_current_stock)
         val minimumStockInput =
@@ -59,6 +62,9 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         categoryInput.isFocusable = false
         categoryInput.isClickable = true
         categoryInput.setOnClickListener { showCategoryDialog() }
+        supplierInput.isFocusable = false
+        supplierInput.isClickable = true
+        supplierInput.setOnClickListener { showSupplierDialog() }
         currentStockInput.doAfterTextChanged {
             viewModel.onCurrentStockChanged(it?.toString().orEmpty())
         }
@@ -74,6 +80,7 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     categories = state.categories
+                    suppliers = state.suppliers
                     toolbar.setTitle(
                         if (state.mode == ProductEditUiState.Mode.ADD) {
                             R.string.product_add_title
@@ -95,6 +102,9 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
                     }
                     if (categoryInput.text?.toString() != state.categoryName) {
                         categoryInput.setText(state.categoryName)
+                    }
+                    if (supplierInput.text?.toString() != state.supplierName) {
+                        supplierInput.setText(state.supplierName)
                     }
                     if (currentStockInput.text?.toString() != state.currentStockLevel) {
                         currentStockInput.setText(state.currentStockLevel)
@@ -122,6 +132,18 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
             .setTitle(R.string.product_category_select_title)
             .setItems(items) { _, which ->
                 viewModel.onCategorySelected(categories[which])
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showSupplierDialog() {
+        if (suppliers.isEmpty()) return
+        val items = suppliers.map { it.name }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.product_supplier_select_title)
+            .setItems(items) { _, which ->
+                viewModel.onSupplierSelected(suppliers[which])
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()

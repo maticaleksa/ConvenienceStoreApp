@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.Flow
 interface ProductDao {
     @Transaction
     @Query("SELECT * FROM products ORDER BY name ASC")
-    suspend fun getAll(): List<ProductWithCategory>
+    suspend fun getAll(): List<ProductWithCategorySupplier>
 
     @Transaction
     @Query("SELECT * FROM products ORDER BY name ASC")
-    fun getAllFlow(): Flow<List<ProductWithCategory>>
+    fun getAllFlow(): Flow<List<ProductWithCategorySupplier>>
 
     @Transaction
     @Query(
@@ -29,7 +29,7 @@ interface ProductDao {
         ORDER BY name ASC
         """
     )
-    fun searchFlow(query: String): Flow<List<ProductWithCategory>>
+    fun searchFlow(query: String): Flow<List<ProductWithCategorySupplier>>
 
     @Query("SELECT COUNT(*) FROM products")
     suspend fun count(): Int
@@ -39,11 +39,11 @@ interface ProductDao {
 
     @Transaction
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
-    suspend fun getById(id: String): ProductWithCategory?
+    suspend fun getById(id: String): ProductWithCategorySupplier?
 
     @Transaction
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
-    fun getByIdFlow(id: String): Flow<ProductWithCategory?>
+    fun getByIdFlow(id: String): Flow<ProductWithCategorySupplier?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(products: List<ProductEntity>)
