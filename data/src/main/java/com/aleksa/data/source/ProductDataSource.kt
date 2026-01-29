@@ -15,6 +15,7 @@ interface ProductDataSource {
     suspend fun upsertAll(products: List<ProductEntity>)
     suspend fun clearAll()
     suspend fun upsert(product: ProductEntity)
+    suspend fun upsertAndGet(product: ProductEntity): ProductWithCategory?
     suspend fun delete(product: ProductEntity)
     suspend fun deleteByIds(ids: Collection<String>)
 }

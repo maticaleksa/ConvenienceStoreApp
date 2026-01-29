@@ -40,7 +40,8 @@ class FakeNetworkExecutor(
         engine {
             addHandler { request ->
                 val path = request.url.encodedPath
-                val mapped = routes[path]
+                val method = request.method.value
+                val mapped = routes["$method $path"] ?: routes[path]
                     ?: return@addHandler respond(
                         content = """{"message":"No fake response registered for path: $path"}""",
                         status = HttpStatusCode.NotFound,

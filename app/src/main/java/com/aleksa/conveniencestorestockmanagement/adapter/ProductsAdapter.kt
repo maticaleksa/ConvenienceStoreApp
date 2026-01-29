@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.domain.model.Product
 
-class ProductsAdapter :
-    ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback) {
+class ProductsAdapter(
+    private val onItemClick: (Product) -> Unit = {}
+) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,7 +21,7 @@ class ProductsAdapter :
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onItemClick)
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,7 +29,7 @@ class ProductsAdapter :
         private val stockView: TextView = itemView.findViewById(R.id.product_stock)
         private val priceView: TextView = itemView.findViewById(R.id.product_price)
 
-        fun bind(product: Product) {
+        fun bind(product: Product, onItemClick: (Product) -> Unit) {
             nameView.text = product.name
             stockView.text = itemView.context.resources.getQuantityString(
                 R.plurals.product_stock_format,
@@ -39,6 +40,7 @@ class ProductsAdapter :
                 R.string.product_price_format,
                 product.price.toDecimalString()
             )
+            itemView.setOnClickListener { onItemClick(product) }
         }
     }
 

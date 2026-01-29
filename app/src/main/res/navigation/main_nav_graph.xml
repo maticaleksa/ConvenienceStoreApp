@@ -12,7 +12,11 @@
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.aleksa.conveniencestorestockmanagement.fragment.ProductsFragment"
-        android:label="@string/nav_products" />
+        android:label="@string/nav_products">
+        <action
+            android:id="@+id/action_productsFragment_to_productEditFragment"
+            app:destination="@id/productEditFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/suppliersFragment"
@@ -28,4 +32,70 @@
         android:id="@+id/stockFragment"
         android:name="com.aleksa.conveniencestorestockmanagement.fragment.StockFragment"
         android:label="@string/nav_stock" />
+
+    <fragment
+        android:id="@+id/productEditFragment"
+        android:name="com.aleksa.conveniencestorestockmanagement.fragment.ProductEditFragment"
+        android:label="@string/product_add_title">
+        <argument
+            android:name="productId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productDescription"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productPrice"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productBarcode"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productCurrentStock"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productMinimumStock"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productCategoryId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productCategoryName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierContactPerson"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierPhone"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierEmail"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="productSupplierAddress"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

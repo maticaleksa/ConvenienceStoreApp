@@ -17,4 +17,17 @@
     <string name="products_search_hint">Search products</string>
     <string name="products_filter">Filter products</string>
     <string name="products_clear_search">Clear search</string>
+    <string name="products_add">Add product</string>
+    <string name="products_filter_categories_title">Filter by category</string>
+    <string name="products_filter_apply">Apply</string>
+    <string name="products_filter_clear">Clear</string>
+    <string name="product_add_title">Add product</string>
+    <string name="product_edit_title">Edit product</string>
+    <string name="product_save">Save product</string>
+    <string name="product_name">Product name</string>
+    <string name="product_description">Description</string>
+    <string name="product_price">Price</string>
+    <string name="product_barcode">Barcode</string>
+    <string name="product_current_stock">Current stock level</string>
+    <string name="product_minimum_stock">Minimum stock level</string>
 </resources>

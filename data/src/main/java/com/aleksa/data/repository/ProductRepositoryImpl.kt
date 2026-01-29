@@ -6,9 +6,11 @@ import com.aleksa.data.database.toEntity
 import com.aleksa.data.database.toCategoryEntity
 import com.aleksa.data.database.normalizeCategoryId
 import com.aleksa.data.database.ProductEntity
+import com.aleksa.data.database.toEntity as categoryToEntity
 import com.aleksa.data.source.ProductDataSource
 import com.aleksa.data.source.CategoryDataSource
 import com.aleksa.data.source.ProductRemoteDataSource
+import com.aleksa.data.remote.toDto
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.error.ProductSyncError
 import com.aleksa.domain.event.ProductDataCommand
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,6 +38,9 @@ class ProductRepositoryImpl @Inject constructor(
     syncCoordinator: SyncCoordinator,
     @AppScope private val coroutineScope: CoroutineScope,
 ) : ProductRepository {
+    private companion object {
+        private const val TAG = "ProductRepository"
+    }
     val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
 
     init {
@@ -68,6 +74,62 @@ class ProductRepositoryImpl @Inject constructor(
         return localDataSource.searchFlow(likeQuery).map { productList ->
             productList.map { product ->
                 product.toDomain()
+            }
+        }
+    }
+
+    override suspend fun upsert(product: Product) {
+        val safeCategoryId = product.category.id.ifBlank {
+            normalizeCategoryId(product.category.name)
+        }
+        val safeCategory = product.category.copy(id = safeCategoryId)
+        Log.d(
+            TAG,
+            "upsert: productId=${product.id} " +
+                "categoryId=${safeCategory.id} categoryName=${safeCategory.name} " +
+                "supplierId=${product.supplier.id}"
+        )
+        try {
+            categoryDataSource.upsertAll(listOf(safeCategory.categoryToEntity()))
+        } catch (e: Exception) {
+            Log.e(TAG, "upsert: category upsert failed categoryId=${safeCategory.id}", e)
+            throw e
+        }
+        val remoteResult = remoteDataSource.upsert(product.copy(category = safeCategory).toDto())
+        when (remoteResult) {
+            is NetworkResult.Success -> {
+                val dto = remoteResult.data
+                Log.d(TAG, "upsert(remote): dtoId=${dto.id} dtoCategory=${dto.category}")
+                try {
+                    categoryDataSource.upsertAll(listOf(dto.toCategoryEntity()))
+                } catch (e: Exception) {
+                    Log.e(TAG, "upsert(remote): category upsert failed dtoCategory=${dto.category}", e)
+                    throw e
+                }
+                val normalizedDtoCategoryId = normalizeCategoryId(dto.category)
+                try {
+                    localDataSource.upsert(dto.toEntity(normalizedDtoCategoryId))
+                } catch (e: Exception) {
+                    Log.e(
+                        TAG,
+                        "upsert(remote): product upsert failed dtoCategoryId=$normalizedDtoCategoryId",
+                        e
+                    )
+                    throw e
+                }
+            }
+            is NetworkResult.Error -> {
+                Log.d(TAG, "upsert(remote): error=${remoteResult.error.message}")
+                try {
+                    localDataSource.upsert(product.copy(category = safeCategory).toEntity())
+                } catch (e: Exception) {
+                    Log.e(
+                        TAG,
+                        "upsert(local): product upsert failed categoryId=${safeCategory.id}",
+                        e
+                    )
+                    throw e
+                }
             }
         }
     }

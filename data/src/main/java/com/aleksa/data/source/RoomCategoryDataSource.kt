@@ -7,6 +7,8 @@ import javax.inject.Inject
 class RoomCategoryDataSource @Inject constructor(
     private val categoryDao: CategoryDao
 ) : CategoryDataSource {
+    override fun getAllFlow() = categoryDao.getAllFlow()
+
     override suspend fun upsertAll(categories: List<CategoryEntity>) {
         categoryDao.upsertAll(categories)
     }

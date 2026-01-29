@@ -6,4 +6,5 @@ import com.aleksa.network.NetworkResult
 
 interface ProductRemoteDataSource {
     suspend fun fetchAll(): NetworkResult<List<ProductDto>, ErrorResponse>
+    suspend fun upsert(product: ProductDto): NetworkResult<ProductDto, ErrorResponse>
 }

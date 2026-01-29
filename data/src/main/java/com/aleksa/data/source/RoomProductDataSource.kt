@@ -30,6 +30,11 @@ class RoomProductDataSource @Inject constructor(
 
     override suspend fun upsert(product: ProductEntity) = productDao.upsert(product)
 
+    override suspend fun upsertAndGet(product: ProductEntity): ProductWithCategory? {
+        productDao.upsert(product)
+        return productDao.getById(product.id)
+    }
+
     override suspend fun delete(product: ProductEntity) = productDao.delete(product)
 
     override suspend fun deleteByIds(ids: Collection<String>) = productDao.deleteByIds(ids)

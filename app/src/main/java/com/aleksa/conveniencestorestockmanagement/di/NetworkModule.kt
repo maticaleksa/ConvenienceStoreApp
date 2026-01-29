@@ -3,6 +3,8 @@ package com.aleksa.conveniencestorestockmanagement.di
 import com.aleksa.conveniencestorestockmanagement.data.NetworkGreetingRepository
 import com.aleksa.conveniencestorestockmanagement.domain.GreetingRepository
 import com.aleksa.data.repository.ProductRepositoryImpl
+import com.aleksa.data.repository.CategoryRepositoryImpl
+import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.ProductRepository
 import com.aleksa.data.fake.fakeProductsDtoList
 import com.aleksa.data.remote.ProductDto
@@ -63,10 +65,12 @@ object NetworkModule {
     fun provideFakeNetworkExecutor(): FakeNetworkExecutor {
         val productsJson =
             Json.encodeToString(ListSerializer(ProductDto.serializer()), fakeProductsDtoList)
+        val firstProduct = fakeProductsDtoList.first()
         return FakeNetworkExecutor(
             routes = mapOf(
                 "/greeting" to NetworkResult.Success("Hello from Fake Network"),
-                ApiPaths.PRODUCTS to NetworkResult.Success(productsJson),
+                "GET ${ApiPaths.PRODUCTS}" to NetworkResult.Success(productsJson),
+                "POST ${ApiPaths.PRODUCTS}" to NetworkResult.Success(firstProduct),
             ),
         )
     }
@@ -93,4 +97,10 @@ abstract class RepositoryModule {
     abstract fun bindProductRepository(
         repository: ProductRepositoryImpl,
     ): ProductRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoryRepository(
+        repository: CategoryRepositoryImpl,
+    ): CategoryRepository
 }

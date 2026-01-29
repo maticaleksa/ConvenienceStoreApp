@@ -134,6 +134,11 @@ private fun CategoryEntity.toDomain(): Category = Category(
     name = name,
 )
 
+fun Category.toEntity(): CategoryEntity = CategoryEntity(
+    id = id,
+    name = name,
+)
+
 fun normalizeCategoryId(name: String): String {
     return name
         .trim()
