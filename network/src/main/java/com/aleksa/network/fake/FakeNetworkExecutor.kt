@@ -11,7 +11,11 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.http.content.OutgoingContent
+import io.ktor.http.content.TextContent
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.core.readText
+import io.ktor.utils.io.readRemaining
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -23,8 +27,16 @@ import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
+data class FakeRequest(
+    val method: String,
+    val path: String,
+    val bodyText: String?,
+)
+
 class FakeNetworkExecutor(
     private val routes: Map<String, NetworkResult<Any, ErrorResponse>>,
+    private val handlers: Map<String, (FakeRequest) -> NetworkResult<Any, ErrorResponse>> =
+        emptyMap(),
 ) : NetworkExecutor {
 
     private val mockClient = HttpClient(MockEngine) {
@@ -41,7 +53,19 @@ class FakeNetworkExecutor(
             addHandler { request ->
                 val path = request.url.encodedPath
                 val method = request.method.value
-                val mapped = routes["$method $path"] ?: routes[path]
+                val key = "$method $path"
+                val handler = handlers[key] ?: handlers[path]
+                val mapped = if (handler != null) {
+                    handler(
+                        FakeRequest(
+                            method = method,
+                            path = path,
+                            bodyText = readBodyText(request.body),
+                        ),
+                    )
+                } else {
+                    routes[key] ?: routes[path]
+                }
                     ?: return@addHandler respond(
                         content = """{"message":"No fake response registered for path: $path"}""",
                         status = HttpStatusCode.NotFound,
@@ -90,6 +114,15 @@ class FakeNetworkExecutor(
         } catch (e: Exception) {
             NetworkResult.Error(ErrorResponse(message = e.message ?: "Network request failed"))
         }
+    }
+}
+
+private suspend fun readBodyText(body: OutgoingContent): String? {
+    return when (body) {
+        is OutgoingContent.ByteArrayContent -> body.bytes().decodeToString()
+        is TextContent -> body.text
+        is OutgoingContent.ReadChannelContent -> body.readFrom().readRemaining().readText()
+        else -> null
     }
 }
 

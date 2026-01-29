@@ -17,9 +17,13 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import android.util.Log
 
 @AndroidEntryPoint
 class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
+    private companion object {
+        private const val TAG = "ProductEditFragment"
+    }
     private val viewModel: ProductEditViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +58,10 @@ class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
         minimumStockInput.doAfterTextChanged {
             viewModel.onMinimumStockChanged(it?.toString().orEmpty())
         }
-        saveButton.setOnClickListener { viewModel.onSaveClicked() }
+        saveButton.setOnClickListener {
+            Log.d(TAG, "save clicked")
+            viewModel.onSaveClicked()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {

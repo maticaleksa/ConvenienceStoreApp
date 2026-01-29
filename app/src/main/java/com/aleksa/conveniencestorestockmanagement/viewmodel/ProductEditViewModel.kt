@@ -19,12 +19,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.UUID
+import android.util.Log
 
 @HiltViewModel
 class ProductEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
 ) : ViewModel() {
+    private companion object {
+        private const val TAG = "ProductEditViewModel"
+    }
 
     private val productId: String? = savedStateHandle["productId"]
     private val productName: String? = savedStateHandle["productName"]
@@ -88,6 +92,7 @@ class ProductEditViewModel @Inject constructor(
 
     fun onSaveClicked() {
         val state = _uiState.value
+        Log.d(TAG, "onSaveClicked: id=${productId} name=${state.name}")
         viewModelScope.launch {
             val resolvedCategory = Category(
                 id = productCategoryId ?: "uncategorized",

@@ -9,6 +9,8 @@ import com.aleksa.network.execute
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import javax.inject.Inject
 
 class NetworkProductRemoteDataSource @Inject constructor(
@@ -21,6 +23,7 @@ class NetworkProductRemoteDataSource @Inject constructor(
     override suspend fun upsert(product: ProductDto): NetworkResult<ProductDto, ErrorResponse> {
         return networkExecutor.execute {
             post(ApiPaths.PRODUCTS) {
+                contentType(ContentType.Application.Json)
                 setBody(product)
             }
         }
