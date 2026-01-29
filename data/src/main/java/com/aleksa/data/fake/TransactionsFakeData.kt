@@ -8,7 +8,7 @@ import kotlinx.datetime.Instant
 val fakeTransactionsList = listOf(
     Transaction(
         id = "t1",
-        date = Instant.parse("2025-01-10T09:15:00Z"),
+        date = Instant.parse("2026-01-27T09:15:00Z"),
         type = TransactionType.RESTOCK,
         productId = "p1",
         quantity = 20,
