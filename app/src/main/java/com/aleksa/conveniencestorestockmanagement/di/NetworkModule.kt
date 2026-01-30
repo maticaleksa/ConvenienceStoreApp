@@ -1,6 +1,10 @@
 package com.aleksa.conveniencestorestockmanagement.di
 
+import com.aleksa.conveniencestorestockmanagement.data.NetworkAuthRepository
 import com.aleksa.conveniencestorestockmanagement.data.NetworkGreetingRepository
+import com.aleksa.conveniencestorestockmanagement.domain.AuthRepository
+import com.aleksa.data.remote.AuthLoginRequest
+import com.aleksa.data.remote.AuthLoginResponse
 import com.aleksa.conveniencestorestockmanagement.domain.GreetingRepository
 import com.aleksa.data.repository.ProductRepositoryImpl
 import com.aleksa.data.repository.CategoryRepositoryImpl
@@ -112,6 +116,34 @@ object NetworkModule {
         var transactionsJson = loadOrSeedTransactionsJson(transactionsFile, json)
         val handlers: Map<String, (FakeRequest) -> NetworkResult<Any, ErrorResponse>> =
             mapOf(
+                "POST ${ApiPaths.AUTH_LOGIN}" to { request: FakeRequest ->
+                    val body = request.bodyText
+                    if (body == null) {
+                        Log.d(TAG, "POST ${ApiPaths.AUTH_LOGIN} missing body")
+                        NetworkResult.Error(
+                            ErrorResponse(message = "Missing body"),
+                        )
+                    } else {
+                        val credentials = json.decodeFromString(
+                            AuthLoginRequest.serializer(),
+                            body,
+                        )
+                        val isValid =
+                            credentials.username == "admin" && credentials.password == "admin"
+                        if (isValid) {
+                            NetworkResult.Success(
+                                json.encodeToString(
+                                    AuthLoginResponse.serializer(),
+                                    AuthLoginResponse(authenticated = true),
+                                ),
+                            )
+                        } else {
+                            NetworkResult.Error(
+                                ErrorResponse(message = "Username or password is incorrect"),
+                            )
+                        }
+                    }
+                },
                 "GET ${ApiPaths.PRODUCTS}" to { _: FakeRequest ->
                 if (storageFile.exists()) {
                     productsJson = storageFile.readText()
@@ -285,6 +317,12 @@ object NetworkModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(
+        repository: NetworkAuthRepository,
+    ): AuthRepository
+
 
     @Binds
     @Singleton

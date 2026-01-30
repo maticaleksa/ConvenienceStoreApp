@@ -18,12 +18,21 @@ open class BaseFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val label = requireActivity().findViewById<TextView>(R.id.no_internet_label)
-            ?: return
+        val activityLabel = requireActivity().findViewById<TextView>(R.id.no_internet_label)
+        val fragmentLabel = view.findViewById<TextView>(R.id.no_internet_label)
+        if (activityLabel == null && fragmentLabel == null) {
+            return
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 baseViewModel.isOnline.collect { isOnline ->
-                    label.visibility = if (isOnline) View.GONE else View.VISIBLE
+                    val visibility = if (isOnline) View.GONE else View.VISIBLE
+                    if (fragmentLabel != null) {
+                        fragmentLabel.visibility = visibility
+                        activityLabel?.visibility = View.GONE
+                    } else {
+                        activityLabel?.visibility = visibility
+                    }
                 }
             }
         }

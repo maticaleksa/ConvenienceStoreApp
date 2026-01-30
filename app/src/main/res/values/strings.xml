@@ -83,4 +83,9 @@
     <string name="stock_decrement">Decrement quantity</string>
     <string name="stock_increment">Increment quantity</string>
     <string name="no_internet">No internet connection</string>
+    <string name="login_title">Login</string>
+    <string name="login_button">Continue</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_credentials_hint">Username is admin and password is admin.</string>
 </resources>
