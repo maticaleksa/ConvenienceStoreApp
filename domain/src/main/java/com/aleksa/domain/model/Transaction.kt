@@ -10,8 +10,3 @@ data class Transaction(
     val quantity: Int,
     val notes: String?,
 )
-
-enum class TransactionType {
-    RESTOCK,
-    SALE,
-}

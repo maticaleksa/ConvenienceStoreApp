@@ -69,4 +69,15 @@
     <string name="product_supplier_select_title">Select supplier</string>
     <string name="product_current_stock">Current stock level</string>
     <string name="product_minimum_stock">Minimum stock level</string>
+    <string name="stock_tab_add">Add stock</string>
+    <string name="stock_tab_sale">Record sale</string>
+    <string name="stock_save_changes">Save changes</string>
+    <string name="stock_product">Product</string>
+    <string name="stock_add_quantity">Add quantity</string>
+    <string name="stock_sale_quantity">Sale quantity</string>
+    <string name="stock_notes">Notes</string>
+    <string name="stock_current_quantity">Current quantity</string>
+    <string name="stock_quantity_placeholder">--</string>
+    <string name="stock_decrement">Decrement quantity</string>
+    <string name="stock_increment">Increment quantity</string>
 </resources>
