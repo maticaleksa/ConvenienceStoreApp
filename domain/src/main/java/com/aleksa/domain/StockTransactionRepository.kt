@@ -7,5 +7,5 @@ interface StockTransactionRepository {
     suspend fun applyTransaction(
         updatedProduct: Product,
         transaction: Transaction,
-    )
+    ): StockTransactionResult
 }

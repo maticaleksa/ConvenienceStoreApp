@@ -10,10 +10,12 @@ import com.aleksa.data.source.ProductRemoteDataSource
 import com.aleksa.data.source.TransactionDataSource
 import com.aleksa.data.source.TransactionRemoteDataSource
 import com.aleksa.domain.StockTransactionRepository
+import com.aleksa.domain.StockTransactionResult
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Transaction
 import com.aleksa.network.NetworkResult
 import com.aleksa.core.arch.sync.SyncState
+import com.aleksa.core.arch.sync.UnknownSyncError
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,19 +31,28 @@ class StockTransactionRepositoryImpl @Inject constructor(
 
     private val syncChannel = syncCoordinator.getOrCreateChannel(StockTransactionsSyncChannelKey)
 
-    override suspend fun applyTransaction(updatedProduct: Product, transaction: Transaction) {
+    override suspend fun applyTransaction(
+        updatedProduct: Product,
+        transaction: Transaction,
+    ): StockTransactionResult {
         syncChannel.execute {
             val productResult = productRemoteDataSource.upsert(updatedProduct.toDto())
             if (productResult is NetworkResult.Error) {
-                throw IllegalStateException(
-                    "Product remote update failed: ${productResult.error.message}"
+                syncChannel.reportError(
+                    UnknownSyncError(
+                        "Product remote update failed: ${productResult.error.message}"
+                    ),
                 )
+                return@execute
             }
             val transactionResult = transactionRemoteDataSource.upsert(transaction.toDto())
             if (transactionResult is NetworkResult.Error) {
-                throw IllegalStateException(
-                    "Transaction remote update failed: ${transactionResult.error.message}"
+                syncChannel.reportError(
+                    UnknownSyncError(
+                        "Transaction remote update failed: ${transactionResult.error.message}"
+                    ),
                 )
+                return@execute
             }
             database.withTransaction {
                 productDataSource.upsert(updatedProduct.toEntity())
@@ -49,11 +60,13 @@ class StockTransactionRepositoryImpl @Inject constructor(
             }
         }
         val state = syncChannel.state.value
-        if (state is SyncState.Error) {
+        return if (state is SyncState.Error) {
             val message = state.error.message
                 ?: state.throwable?.message
                 ?: "Sync failed"
-            throw IllegalStateException(message, state.throwable)
+            StockTransactionResult.Error(message)
+        } else {
+            StockTransactionResult.Success
         }
     }
 }

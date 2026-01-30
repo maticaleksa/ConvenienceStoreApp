@@ -1,6 +1,7 @@
 package com.aleksa.domain.usecases
 
 import com.aleksa.domain.StockTransactionRepository
+import com.aleksa.domain.StockTransactionResult
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Transaction
 import com.aleksa.domain.model.TransactionType
@@ -16,7 +17,7 @@ class ApplyStockTransactionUseCase @Inject constructor(
         quantity: Int,
         notes: String?,
         type: TransactionType,
-    ) {
+    ): StockTransactionResult {
         val adjusted = when (type) {
             TransactionType.RESTOCK ->
                 product.copy(currentStockLevel = product.currentStockLevel + quantity)
@@ -31,6 +32,6 @@ class ApplyStockTransactionUseCase @Inject constructor(
             quantity = quantity,
             notes = notes?.trim().orEmpty().ifBlank { null },
         )
-        repository.applyTransaction(adjusted, transaction)
+        return repository.applyTransaction(adjusted, transaction)
     }
 }

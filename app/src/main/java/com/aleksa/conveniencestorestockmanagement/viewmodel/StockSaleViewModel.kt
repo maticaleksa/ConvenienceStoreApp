@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.StockSaleUiState
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.domain.ProductRepository
+import com.aleksa.domain.StockTransactionResult
 import com.aleksa.domain.model.TransactionType
 import com.aleksa.domain.usecases.ApplyStockTransactionUseCase
 import com.aleksa.domain.usecases.ProductSearchUseCase
@@ -63,16 +64,20 @@ class StockSaleViewModel @Inject constructor(
             val max = product.currentStockLevel
             val qty = state.quantity.coerceIn(0, max)
             if (qty == 0) return@launch
-            try {
-                applyStockTransactionUseCase(
+            when (
+                val result = applyStockTransactionUseCase(
                     product = product,
                     quantity = qty,
                     notes = state.notes,
                     type = TransactionType.SALE,
                 )
-                _uiState.update { it.copy(quantity = 0, notes = "") }
-            } catch (e: Exception) {
-                _uiState.update { it.withErrorMessage(e.message ?: "Save failed") }
+            ) {
+                is StockTransactionResult.Success -> {
+                    _uiState.update { it.copy(quantity = 0, notes = "") }
+                }
+                is StockTransactionResult.Error -> {
+                    _uiState.update { it.withErrorMessage(result.message) }
+                }
             }
         }
     }
