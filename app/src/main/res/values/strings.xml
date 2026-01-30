@@ -5,6 +5,8 @@
     <string name="nav_dashboard">Dashboard</string>
     <string name="dashboard_low_stock_title">Low stock</string>
     <string name="dashboard_low_stock_empty">No low stock products.</string>
+    <string name="dashboard_recent_transactions">Recent transactions (last 5 days)</string>
+    <string name="dashboard_recent_empty">No recent transactions in the last 5 days.</string>
     <string name="nav_products">Products</string>
     <string name="nav_suppliers">Suppliers</string>
     <string name="nav_transactions">Transactions</string>
