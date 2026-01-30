@@ -6,10 +6,12 @@ import com.aleksa.data.repository.ProductRepositoryImpl
 import com.aleksa.data.repository.CategoryRepositoryImpl
 import com.aleksa.data.repository.SupplierRepositoryImpl
 import com.aleksa.data.repository.TransactionRepositoryImpl
+import com.aleksa.data.repository.StockTransactionRepositoryImpl
 import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.SupplierRepository
 import com.aleksa.domain.TransactionRepository
+import com.aleksa.domain.StockTransactionRepository
 import com.aleksa.data.fake.fakeProductsDtoList
 import com.aleksa.data.fake.fakeSuppliersDtoList
 import com.aleksa.data.fake.fakeTransactionsDtoList
@@ -301,4 +303,10 @@ abstract class RepositoryModule {
     abstract fun bindTransactionRepository(
         repository: TransactionRepositoryImpl,
     ): TransactionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindStockTransactionRepository(
+        repository: StockTransactionRepositoryImpl,
+    ): StockTransactionRepository
 }

@@ -3,25 +3,22 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.StockSaleUiState
 import com.aleksa.domain.ProductRepository
-import com.aleksa.domain.TransactionRepository
-import com.aleksa.domain.model.Transaction
 import com.aleksa.domain.model.TransactionType
+import com.aleksa.domain.usecases.ApplyStockTransactionUseCase
 import com.aleksa.domain.usecases.ProductSearchUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import java.util.UUID
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class StockSaleViewModel @Inject constructor(
     productSearchUseCase: ProductSearchUseCase,
-    private val productRepository: ProductRepository,
-    private val transactionRepository: TransactionRepository,
+    productRepository: ProductRepository,
+    private val applyStockTransactionUseCase: ApplyStockTransactionUseCase,
 ) : BaseStockViewModel<StockSaleUiState>(
     productSearchUseCase = productSearchUseCase,
     productRepository = productRepository,
@@ -60,17 +57,11 @@ class StockSaleViewModel @Inject constructor(
             val max = product.currentStockLevel
             val qty = state.quantity.coerceIn(0, max)
             if (qty == 0) return@launch
-            val updated = product.copy(currentStockLevel = product.currentStockLevel - qty)
-            productRepository.upsert(updated)
-            transactionRepository.upsert(
-                Transaction(
-                    id = UUID.randomUUID().toString(),
-                    date = Clock.System.now(),
-                    type = TransactionType.SALE,
-                    productId = product.id,
-                    quantity = qty,
-                    notes = state.notes.trim().ifBlank { null }
-                )
+            applyStockTransactionUseCase(
+                product = product,
+                quantity = qty,
+                notes = state.notes,
+                type = TransactionType.SALE,
             )
             _uiState.update { it.copy(quantity = 0, notes = "") }
         }
