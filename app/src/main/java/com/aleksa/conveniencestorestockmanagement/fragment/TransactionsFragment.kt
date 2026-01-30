@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.TransactionsAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.TransactionsViewModel
@@ -28,6 +29,8 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<RecyclerView>(R.id.transactions_list)
+        val swipeRefresh =
+            view.findViewById<SwipeRefreshLayout>(R.id.transactions_swipe_refresh)
         val emptyView = view.findViewById<TextView>(R.id.transactions_empty)
         val filterButton = view.findViewById<AppCompatImageButton>(R.id.transactions_filter_button)
         val adapter = TransactionsAdapter()
@@ -35,6 +38,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
         listView.adapter = adapter
 
         filterButton.setOnClickListener { showFilterDialog() }
+        swipeRefresh.setOnRefreshListener { viewModel.refresh() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -44,6 +48,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
                     dateFilter = state.dateFilter
                     emptyView.visibility =
                         if (state.isEmpty) View.VISIBLE else View.GONE
+                    swipeRefresh.isRefreshing = state.isSyncing
                 }
             }
         }

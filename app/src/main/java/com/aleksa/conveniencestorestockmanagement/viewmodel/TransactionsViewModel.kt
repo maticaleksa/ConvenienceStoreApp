@@ -3,7 +3,11 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.TransactionsUiState
+import com.aleksa.core.arch.event.DataCommandBus
+import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.data.repository.TransactionsSyncChannelKey
 import com.aleksa.domain.TransactionRepository
+import com.aleksa.domain.event.TransactionDataCommand.RefreshAll
 import com.aleksa.domain.model.Transaction
 import com.aleksa.domain.model.TransactionType
 import com.aleksa.domain.usecases.TransactionDateFilter
@@ -14,6 +18,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +27,8 @@ import javax.inject.Inject
 class TransactionsViewModel @Inject constructor(
     transactionRepository: TransactionRepository,
     private val filterUseCase: TransactionFilterUseCase,
+    private val dataCommandBus: DataCommandBus,
+    syncCoordinator: SyncCoordinator,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TransactionsUiState())
@@ -28,8 +36,10 @@ class TransactionsViewModel @Inject constructor(
 
     private val selectedTypes = MutableStateFlow<Set<TransactionType>>(emptySet())
     private val dateFilter = MutableStateFlow(TransactionDateFilter.ALL)
+    private val syncChannel = syncCoordinator.getOrCreateChannel(TransactionsSyncChannelKey)
 
     init {
+        observeSyncStatus()
         viewModelScope.launch {
             combine(
                 transactionRepository.observeAll(),
@@ -42,11 +52,20 @@ class TransactionsViewModel @Inject constructor(
                     selectedTypes = types,
                     dateFilter = date,
                     isEmpty = filtered.isEmpty(),
+                    isSyncing = _uiState.value.isSyncing,
                 )
             }.collectLatest { newState ->
                 _uiState.value = newState
             }
         }
+    }
+
+    private fun observeSyncStatus() {
+        syncChannel.isActive
+            .onEach { isSyncing ->
+                _uiState.value = _uiState.value.copy(isSyncing = isSyncing)
+            }
+            .launchIn(viewModelScope)
     }
 
     fun updateSelectedTypes(types: Set<TransactionType>) {
@@ -55,5 +74,11 @@ class TransactionsViewModel @Inject constructor(
 
     fun updateDateFilter(filter: TransactionDateFilter) {
         dateFilter.value = filter
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            dataCommandBus.emit(RefreshAll)
+        }
     }
 }

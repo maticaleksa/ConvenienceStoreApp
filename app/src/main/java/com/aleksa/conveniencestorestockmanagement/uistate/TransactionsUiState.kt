@@ -7,6 +7,7 @@ import com.aleksa.domain.usecases.TransactionDateFilter
 data class TransactionsUiState(
     val items: List<Transaction> = emptyList(),
     val isEmpty: Boolean = true,
+    val isSyncing: Boolean = false,
     val selectedTypes: Set<TransactionType> = emptySet(),
     val dateFilter: TransactionDateFilter = TransactionDateFilter.ALL,
 )

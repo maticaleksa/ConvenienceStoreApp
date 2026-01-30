@@ -22,6 +22,10 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val swipeRefresh =
+            view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
+                R.id.dashboard_swipe_refresh
+            )
         val listView = view.findViewById<RecyclerView>(R.id.dashboard_low_stock_list)
         val emptyView = view.findViewById<TextView>(R.id.dashboard_low_stock_empty)
         val lowStockToggle = view.findViewById<TextView>(R.id.dashboard_low_stock_toggle)
@@ -36,6 +40,9 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
         recentList.adapter = recentAdapter
         lowStockToggle.setOnClickListener { viewModel.toggleLowStockExpanded() }
         recentToggle.setOnClickListener { viewModel.toggleRecentExpanded() }
+        swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -71,6 +78,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
                     } else {
                         getString(R.string.dashboard_show_all)
                     }
+                    swipeRefresh.isRefreshing = state.isSyncing
                 }
             }
         }
