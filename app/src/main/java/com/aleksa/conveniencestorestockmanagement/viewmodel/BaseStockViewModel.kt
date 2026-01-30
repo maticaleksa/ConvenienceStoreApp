@@ -98,6 +98,10 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
         _uiState.update { it.withNotes(value) }
     }
 
+    fun clearError() {
+        _uiState.update { it.withErrorMessage(null) }
+    }
+
     fun incrementQuantity() {
         ensureActive()
         _uiState.update { state ->

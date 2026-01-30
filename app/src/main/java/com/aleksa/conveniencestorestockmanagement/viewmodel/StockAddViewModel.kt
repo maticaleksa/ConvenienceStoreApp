@@ -42,6 +42,7 @@ class StockAddViewModel @Inject constructor(
             quantity = quantity,
             notes = notes,
             isQuantityValid = isQuantityValid,
+            errorMessage = currentState().errorMessage,
         )
     }
 
@@ -54,13 +55,17 @@ class StockAddViewModel @Inject constructor(
             val state = currentState()
             val qty = state.quantity.coerceAtLeast(0)
             if (qty == 0) return@launch
-            applyStockTransactionUseCase(
-                product = product,
-                quantity = qty,
-                notes = state.notes,
-                type = TransactionType.RESTOCK,
-            )
-            _uiState.update { it.copy(quantity = 0, notes = "") }
+            try {
+                applyStockTransactionUseCase(
+                    product = product,
+                    quantity = qty,
+                    notes = state.notes,
+                    type = TransactionType.RESTOCK,
+                )
+                _uiState.update { it.copy(quantity = 0, notes = "") }
+            } catch (e: Exception) {
+                _uiState.update { it.withErrorMessage(e.message ?: "Save failed") }
+            }
         }
     }
 }

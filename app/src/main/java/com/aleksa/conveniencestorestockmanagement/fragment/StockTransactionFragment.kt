@@ -162,6 +162,15 @@ class StockTransactionFragment : Fragment(R.layout.fragment_stock_transaction) {
                     }
 
                     saveButton.isEnabled = uiState.isQuantityValid
+
+                    if (uiState.errorMessage != null) {
+                        android.widget.Toast.makeText(
+                            requireContext(),
+                            uiState.errorMessage,
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.clearError()
+                    }
                 }
             }
         }
