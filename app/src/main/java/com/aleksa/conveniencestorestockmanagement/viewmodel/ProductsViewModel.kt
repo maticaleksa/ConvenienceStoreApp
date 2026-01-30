@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductsUiState
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.data.repository.ProductsSyncChannelKey
 import com.aleksa.domain.CategoryRepository
 import com.aleksa.domain.usecases.ProductFilters
@@ -50,6 +51,7 @@ class ProductsViewModel @Inject constructor(
         observeProducts()
         observeCategories()
         observeSyncStatus()
+        observeSyncErrors()
         observeSearchQuery()
         observeSelectedCategories()
     }
@@ -86,6 +88,19 @@ class ProductsViewModel @Inject constructor(
         syncChannel.isActive
             .onEach { isSyncing ->
                 _uiState.update { it.copy(isSyncing = isSyncing) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeSyncErrors() {
+        syncChannel.state
+            .onEach { state ->
+                if (state is SyncState.Error) {
+                    val message = state.error.message
+                        ?: state.throwable?.message
+                        ?: "Sync failed"
+                    _uiState.update { it.copy(errorMessage = message) }
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -131,5 +146,9 @@ class ProductsViewModel @Inject constructor(
 
     fun onAddProductClicked() {
         _addProductEvents.tryEmit(Unit)
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

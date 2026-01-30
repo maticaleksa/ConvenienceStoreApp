@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.data.repository.SuppliersSyncChannelKey
 import com.aleksa.domain.event.SupplierDataCommand.RefreshAll
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ class SuppliersViewModel @Inject constructor(
         observeSuppliers()
         observeSearchQuery()
         observeSyncStatus()
+        observeSyncErrors()
     }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -66,6 +68,19 @@ class SuppliersViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private fun observeSyncErrors() {
+        syncChannel.state
+            .onEach { state ->
+                if (state is SyncState.Error) {
+                    val message = state.error.message
+                        ?: state.throwable?.message
+                        ?: "Sync failed"
+                    _uiState.update { it.copy(errorMessage = message) }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     fun onSearchQueryChanged(query: String) {
         searchQuery.value = query
     }
@@ -78,5 +93,9 @@ class SuppliersViewModel @Inject constructor(
         viewModelScope.launch {
             dataCommandBus.emit(RefreshAll)
         }
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

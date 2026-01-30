@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class StockTransactionFragment : Fragment(R.layout.fragment_stock_transaction) {
+class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transaction) {
 
     companion object {
         private const val ARG_TRANSACTION_TYPE = "transaction_type"

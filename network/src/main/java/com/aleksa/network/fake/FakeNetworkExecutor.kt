@@ -37,6 +37,7 @@ class FakeNetworkExecutor(
     private val routes: Map<String, NetworkResult<Any, ErrorResponse>>,
     private val handlers: Map<String, (FakeRequest) -> NetworkResult<Any, ErrorResponse>> =
         emptyMap(),
+    private val isNetworkAvailable: () -> Boolean = { true },
 ) : NetworkExecutor {
 
     private val mockClient = HttpClient(MockEngine) {
@@ -51,6 +52,18 @@ class FakeNetworkExecutor(
 
         engine {
             addHandler { request ->
+                if (!isNetworkAvailable()) {
+                    return@addHandler respond(
+                        content = Json.encodeToString(
+                            ErrorResponse.serializer(),
+                            ErrorResponse(message = "No network connection"),
+                        ),
+                        status = HttpStatusCode.ServiceUnavailable,
+                        headers = headersOf(
+                            "Content-Type" to listOf(ContentType.Application.Json.toString()),
+                        ),
+                    )
+                }
                 val path = request.url.encodedPath
                 val method = request.method.value
                 val key = "$method $path"

@@ -3,7 +3,6 @@ package com.aleksa.conveniencestorestockmanagement.fragment
 import android.view.View
 import android.os.Bundle
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
+class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
     private val viewModel: DashboardViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,10 +29,18 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.lowStock.collect { items ->
-                    adapter.submitList(items)
+                viewModel.uiState.collect { state ->
+                    adapter.submitList(state.lowStock)
                     emptyView.visibility =
-                        if (items.isEmpty()) View.VISIBLE else View.GONE
+                        if (state.lowStock.isEmpty()) View.VISIBLE else View.GONE
+                    if (state.errorMessage != null) {
+                        android.widget.Toast.makeText(
+                            requireContext(),
+                            state.errorMessage,
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.clearError()
+                    }
                 }
             }
         }

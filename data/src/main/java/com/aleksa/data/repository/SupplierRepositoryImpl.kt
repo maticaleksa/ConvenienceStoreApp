@@ -22,6 +22,7 @@ import javax.inject.Singleton
 import com.aleksa.core.arch.coroutines.AppScope
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.core.arch.sync.UnknownSyncError
 
 @Singleton
 class SupplierRepositoryImpl @Inject constructor(
@@ -85,7 +86,9 @@ class SupplierRepositoryImpl @Inject constructor(
                     removeSuppliersThatNoLongerExistOnRemote(fresh)
                 }
                 is NetworkResult.Error -> {
-                    // ignore for now
+                    syncChannel.reportError(
+                        UnknownSyncError(message = networkResult.error.message)
+                    )
                 }
             }
         }

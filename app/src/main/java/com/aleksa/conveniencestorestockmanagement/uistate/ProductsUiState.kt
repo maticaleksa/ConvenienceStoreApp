@@ -11,5 +11,6 @@ data class ProductsUiState(
     val selectedCategoryIds: Set<String> = emptySet(),
     val searchQuery: String = "",
     val isEmpty: Boolean = true,
-    val isSearchActive: Boolean = false
+    val isSearchActive: Boolean = false,
+    val errorMessage: String? = null,
 )

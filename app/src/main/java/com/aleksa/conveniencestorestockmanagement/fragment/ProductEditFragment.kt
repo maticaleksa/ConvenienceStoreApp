@@ -3,7 +3,6 @@ package com.aleksa.conveniencestorestockmanagement.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 import android.util.Log
 
 @AndroidEntryPoint
-class ProductEditFragment : Fragment(R.layout.fragment_product_edit) {
+class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
     private companion object {
         private const val TAG = "ProductEditFragment"
     }

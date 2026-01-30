@@ -3,6 +3,9 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.StockUiState
+import com.aleksa.core.arch.sync.SyncChannel
+import com.aleksa.core.arch.sync.SyncCoordinator
+import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.usecases.ProductSearchUseCase
@@ -17,11 +20,16 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import com.aleksa.core.arch.sync.SyncChannelKey
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 abstract class BaseStockViewModel<T : StockUiState<T>>(
     private val productSearchUseCase: ProductSearchUseCase,
     private val productRepository: ProductRepository,
+    private val syncCoordinator: SyncCoordinator,
+    private val syncChannelKey: SyncChannelKey,
     emptyState: T,
 ) : ViewModel() {
 
@@ -33,12 +41,15 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
     val uiState: StateFlow<T> = _uiState.asStateFlow()
 
     private var isActive: Boolean = false
+    private var isSyncObserved: Boolean = false
+    private var syncChannel: SyncChannel? = null
 
     protected fun ensureActive() {
         if (isActive) return
         isActive = true
         observeProducts()
         observeAllProducts()
+        observeSyncState()
         updateUiState()
     }
 
@@ -176,4 +187,20 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
     }
 
     abstract fun save()
+
+    private fun observeSyncState() {
+        if (isSyncObserved) return
+        isSyncObserved = true
+        syncChannel = syncCoordinator.getOrCreateChannel(syncChannelKey)
+        viewModelScope.launch {
+            syncChannel?.state?.collect { state ->
+                if (state is SyncState.Error) {
+                    val message = state.error.message
+                        ?: state.throwable?.message
+                        ?: "Sync failed"
+                    _uiState.update { it.withErrorMessage(message) }
+                }
+            }
+        }
+    }
 }

@@ -45,6 +45,8 @@ import io.ktor.client.HttpClient
 import com.aleksa.network.KtorNetworkExecutor
 import dagger.hilt.android.qualifiers.ApplicationContext
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import java.io.File
 import android.util.Log
 
@@ -215,7 +217,17 @@ object NetworkModule {
                 "/greeting" to NetworkResult.Success("Hello from Fake Network"),
             ),
             handlers = handlers,
+            isNetworkAvailable = { isNetworkAvailable(appContext) },
         )
+    }
+
+    private fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+                ?: return false
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun loadOrSeedProductsJson(

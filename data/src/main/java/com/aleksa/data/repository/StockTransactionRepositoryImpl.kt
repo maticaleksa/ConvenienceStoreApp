@@ -13,6 +13,7 @@ import com.aleksa.domain.StockTransactionRepository
 import com.aleksa.domain.model.Product
 import com.aleksa.domain.model.Transaction
 import com.aleksa.network.NetworkResult
+import com.aleksa.core.arch.sync.SyncState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,6 +47,13 @@ class StockTransactionRepositoryImpl @Inject constructor(
                 productDataSource.upsert(updatedProduct.toEntity())
                 transactionDataSource.upsert(transaction.toEntity())
             }
+        }
+        val state = syncChannel.state.value
+        if (state is SyncState.Error) {
+            val message = state.error.message
+                ?: state.throwable?.message
+                ?: "Sync failed"
+            throw IllegalStateException(message, state.throwable)
         }
     }
 }

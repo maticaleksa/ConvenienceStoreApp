@@ -4,7 +4,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ProductsFragment : Fragment(R.layout.fragment_products) {
+class ProductsFragment : BaseFragment(R.layout.fragment_products) {
     private val viewModel: ProductsViewModel by viewModels()
     private var currentCategories: List<Category> = emptyList()
     private var selectedCategoryIds: Set<String> = emptySet()
@@ -104,6 +103,14 @@ class ProductsFragment : Fragment(R.layout.fragment_products) {
                         } else {
                             android.view.View.GONE
                         }
+                    if (state.errorMessage != null) {
+                        android.widget.Toast.makeText(
+                            requireContext(),
+                            state.errorMessage,
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.clearError()
+                    }
                 }
             }
         }

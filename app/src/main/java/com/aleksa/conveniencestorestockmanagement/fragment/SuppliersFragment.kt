@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -22,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SuppliersFragment : Fragment(R.layout.fragment_suppliers) {
+class SuppliersFragment : BaseFragment(R.layout.fragment_suppliers) {
     private val viewModel: SuppliersViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,6 +72,14 @@ class SuppliersFragment : Fragment(R.layout.fragment_suppliers) {
                     swipeRefresh.isRefreshing = state.isSyncing
                     emptyView.visibility =
                         if (state.items.isEmpty()) View.VISIBLE else View.GONE
+                    if (state.errorMessage != null) {
+                        android.widget.Toast.makeText(
+                            requireContext(),
+                            state.errorMessage,
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.clearError()
+                    }
                 }
             }
         }

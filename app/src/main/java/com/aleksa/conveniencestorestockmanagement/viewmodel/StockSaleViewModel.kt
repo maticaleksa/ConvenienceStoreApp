@@ -2,10 +2,12 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.StockSaleUiState
+import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.model.TransactionType
 import com.aleksa.domain.usecases.ApplyStockTransactionUseCase
 import com.aleksa.domain.usecases.ProductSearchUseCase
+import com.aleksa.data.repository.StockTransactionsSyncChannelKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -18,10 +20,13 @@ import javax.inject.Inject
 class StockSaleViewModel @Inject constructor(
     productSearchUseCase: ProductSearchUseCase,
     productRepository: ProductRepository,
+    syncCoordinator: SyncCoordinator,
     private val applyStockTransactionUseCase: ApplyStockTransactionUseCase,
 ) : BaseStockViewModel<StockSaleUiState>(
     productSearchUseCase = productSearchUseCase,
     productRepository = productRepository,
+    syncCoordinator = syncCoordinator,
+    syncChannelKey = StockTransactionsSyncChannelKey,
     emptyState = StockSaleUiState()
 ) {
 

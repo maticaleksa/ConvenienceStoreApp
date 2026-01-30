@@ -3,7 +3,6 @@ package com.aleksa.conveniencestorestockmanagement.fragment
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
+class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
     private val viewModel: TransactionsViewModel by viewModels()
     private var selectedTypes: Set<TransactionType> = emptySet()
     private var dateFilter: TransactionDateFilter = TransactionDateFilter.ALL

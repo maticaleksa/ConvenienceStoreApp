@@ -1,7 +1,6 @@
 package com.aleksa.conveniencestorestockmanagement.fragment
 
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.StockTabsAdapter
 import com.google.android.material.tabs.TabLayout
@@ -10,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class StockFragment : Fragment(R.layout.fragment_stock) {
+class StockFragment : BaseFragment(R.layout.fragment_stock) {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
