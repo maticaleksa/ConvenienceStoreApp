@@ -7,5 +7,4 @@ data class DashboardUiState(
     val recentTransactions: List<com.aleksa.domain.model.Transaction> = emptyList(),
     val lowStockExpanded: Boolean = false,
     val recentExpanded: Boolean = false,
-    val errorMessage: String? = null,
 )

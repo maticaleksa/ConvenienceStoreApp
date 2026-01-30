@@ -3,6 +3,7 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.DashboardUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.data.repository.ProductsSyncChannelKey
@@ -10,8 +11,10 @@ import com.aleksa.domain.usecases.LowStockProductsUseCase
 import com.aleksa.domain.usecases.RecentTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
@@ -24,6 +27,8 @@ class DashboardViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
     private val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
 
     init {
@@ -55,14 +60,10 @@ class DashboardViewModel @Inject constructor(
                     val message = state.error.message
                         ?: state.throwable?.message
                         ?: "Sync failed"
-                    _uiState.value = _uiState.value.copy(errorMessage = message)
+                    _events.tryEmit(UiEvent.Message(message))
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(errorMessage = null)
     }
 
     fun toggleLowStockExpanded() {

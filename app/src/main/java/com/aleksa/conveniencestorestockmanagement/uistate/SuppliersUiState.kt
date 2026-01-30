@@ -8,5 +8,4 @@ data class SuppliersUiState(
     val isSearchActive: Boolean = false,
     val isEmpty: Boolean = true,
     val isSyncing: Boolean = false,
-    val errorMessage: String? = null,
 )

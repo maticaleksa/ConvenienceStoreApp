@@ -71,13 +71,19 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
                     } else {
                         getString(R.string.dashboard_show_all)
                     }
-                    if (state.errorMessage != null) {
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect { event ->
+                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
                         android.widget.Toast.makeText(
                             requireContext(),
-                            state.errorMessage,
+                            event.text,
                             android.widget.Toast.LENGTH_LONG
                         ).show()
-                        viewModel.clearError()
                     }
                 }
             }

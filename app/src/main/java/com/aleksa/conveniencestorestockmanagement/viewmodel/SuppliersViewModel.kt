@@ -3,6 +3,7 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.SuppliersUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.domain.SupplierRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,6 +11,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.debounce
@@ -21,6 +23,7 @@ import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.data.repository.SuppliersSyncChannelKey
 import com.aleksa.domain.event.SupplierDataCommand.RefreshAll
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +35,8 @@ class SuppliersViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SuppliersUiState())
     val uiState: StateFlow<SuppliersUiState> = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
     private val searchQuery = MutableStateFlow("")
     private val syncChannel = syncCoordinator.getOrCreateChannel(SuppliersSyncChannelKey)
 
@@ -75,7 +80,7 @@ class SuppliersViewModel @Inject constructor(
                     val message = state.error.message
                         ?: state.throwable?.message
                         ?: "Sync failed"
-                    _uiState.update { it.copy(errorMessage = message) }
+                    _events.tryEmit(UiEvent.Message(message))
                 }
             }
             .launchIn(viewModelScope)
@@ -93,9 +98,5 @@ class SuppliersViewModel @Inject constructor(
         viewModelScope.launch {
             dataCommandBus.emit(RefreshAll)
         }
-    }
-
-    fun clearError() {
-        _uiState.update { it.copy(errorMessage = null) }
     }
 }

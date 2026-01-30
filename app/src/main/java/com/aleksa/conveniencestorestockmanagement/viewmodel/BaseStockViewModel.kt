@@ -3,6 +3,7 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.StockUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.core.arch.sync.SyncChannel
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.core.arch.sync.SyncState
@@ -18,11 +19,14 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import com.aleksa.core.arch.sync.SyncChannelKey
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 abstract class BaseStockViewModel<T : StockUiState<T>>(
@@ -39,6 +43,8 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
 
     protected val _uiState = MutableStateFlow(emptyState)
     val uiState: StateFlow<T> = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events: SharedFlow<UiEvent> = _events.asSharedFlow()
 
     private var isActive: Boolean = false
     private var isSyncObserved: Boolean = false
@@ -109,8 +115,8 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
         _uiState.update { it.withNotes(value) }
     }
 
-    fun clearError() {
-        _uiState.update { it.withErrorMessage(null) }
+    protected fun emitMessage(message: String) {
+        _events.tryEmit(UiEvent.Message(message))
     }
 
     fun incrementQuantity() {
@@ -198,7 +204,7 @@ abstract class BaseStockViewModel<T : StockUiState<T>>(
                     val message = state.error.message
                         ?: state.throwable?.message
                         ?: "Sync failed"
-                    _uiState.update { it.withErrorMessage(message) }
+                    emitMessage(message)
                 }
             }
         }

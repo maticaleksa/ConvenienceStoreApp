@@ -161,14 +161,19 @@ class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transactio
                     }
 
                     saveButton.isEnabled = uiState.isQuantityValid
+                }
+            }
+        }
 
-                    if (uiState.errorMessage != null) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect { event ->
+                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
                         android.widget.Toast.makeText(
                             requireContext(),
-                            uiState.errorMessage,
+                            event.text,
                             android.widget.Toast.LENGTH_LONG
                         ).show()
-                        viewModel.clearError()
                     }
                 }
             }

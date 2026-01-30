@@ -12,5 +12,4 @@ data class ProductsUiState(
     val searchQuery: String = "",
     val isEmpty: Boolean = true,
     val isSearchActive: Boolean = false,
-    val errorMessage: String? = null,
 )

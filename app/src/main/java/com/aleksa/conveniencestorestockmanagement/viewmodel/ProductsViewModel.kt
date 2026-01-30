@@ -3,6 +3,7 @@ package com.aleksa.conveniencestorestockmanagement.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductsUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.core.arch.sync.SyncState
@@ -46,6 +47,8 @@ class ProductsViewModel @Inject constructor(
     private val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
     private val _addProductEvents = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val addProductEvents = _addProductEvents.asSharedFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     init {
         observeProducts()
@@ -99,7 +102,7 @@ class ProductsViewModel @Inject constructor(
                     val message = state.error.message
                         ?: state.throwable?.message
                         ?: "Sync failed"
-                    _uiState.update { it.copy(errorMessage = message) }
+                    _events.tryEmit(UiEvent.Message(message))
                 }
             }
             .launchIn(viewModelScope)
@@ -146,9 +149,5 @@ class ProductsViewModel @Inject constructor(
 
     fun onAddProductClicked() {
         _addProductEvents.tryEmit(Unit)
-    }
-
-    fun clearError() {
-        _uiState.update { it.copy(errorMessage = null) }
     }
 }

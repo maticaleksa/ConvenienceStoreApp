@@ -11,7 +11,6 @@ data class StockAddUiState(
     override val quantity: Int = 0,
     override val notes: String = "",
     override val isQuantityValid: Boolean = false,
-    override val errorMessage: String? = null,
 ) : StockUiState<StockAddUiState> {
     override fun withSearchQuery(query: String): StockAddUiState = copy(searchQuery = query)
 
@@ -25,7 +24,4 @@ data class StockAddUiState(
     override fun withQuantity(quantity: Int): StockAddUiState = copy(quantity = quantity)
 
     override fun withNotes(notes: String): StockAddUiState = copy(notes = notes)
-
-    override fun withErrorMessage(message: String?): StockAddUiState =
-        copy(errorMessage = message)
 }

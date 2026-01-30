@@ -11,12 +11,10 @@ interface StockUiState<T : StockUiState<T>> {
     val quantity: Int
     val notes: String
     val isQuantityValid: Boolean
-    val errorMessage: String?
 
     fun withSearchQuery(query: String): T
     fun withProducts(products: List<Product>): T
     fun withSelection(selectedId: String?, selectedName: String): T
     fun withQuantity(quantity: Int): T
     fun withNotes(notes: String): T
-    fun withErrorMessage(message: String?): T
 }

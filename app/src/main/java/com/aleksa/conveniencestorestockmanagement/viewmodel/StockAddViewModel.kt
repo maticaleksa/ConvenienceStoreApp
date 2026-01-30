@@ -48,7 +48,6 @@ class StockAddViewModel @Inject constructor(
             quantity = quantity,
             notes = notes,
             isQuantityValid = isQuantityValid,
-            errorMessage = currentState().errorMessage,
         )
     }
 
@@ -73,7 +72,7 @@ class StockAddViewModel @Inject constructor(
                     _uiState.update { it.copy(quantity = 0, notes = "") }
                 }
                 is StockTransactionResult.Error -> {
-                    _uiState.update { it.withErrorMessage(result.message) }
+                    emitMessage(result.message)
                 }
             }
         }
