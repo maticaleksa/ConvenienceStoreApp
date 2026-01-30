@@ -64,4 +64,12 @@ class DashboardViewModel @Inject constructor(
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
     }
+
+    fun toggleLowStockExpanded() {
+        _uiState.value = _uiState.value.copy(lowStockExpanded = !_uiState.value.lowStockExpanded)
+    }
+
+    fun toggleRecentExpanded() {
+        _uiState.value = _uiState.value.copy(recentExpanded = !_uiState.value.recentExpanded)
+    }
 }

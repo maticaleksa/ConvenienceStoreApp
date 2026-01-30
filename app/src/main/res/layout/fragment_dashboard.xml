@@ -34,6 +34,15 @@
             android:nestedScrollingEnabled="false" />
 
         <TextView
+            android:id="@+id/dashboard_low_stock_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/dashboard_show_all"
+            android:textColor="@color/bottom_nav_item_color"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/dashboard_low_stock_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +65,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/dashboard_recent_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/dashboard_show_all"
+            android:textColor="@color/bottom_nav_item_color"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/dashboard_recent_empty"

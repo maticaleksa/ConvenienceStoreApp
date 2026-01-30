@@ -24,24 +24,53 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
         super.onViewCreated(view, savedInstanceState)
         val listView = view.findViewById<RecyclerView>(R.id.dashboard_low_stock_list)
         val emptyView = view.findViewById<TextView>(R.id.dashboard_low_stock_empty)
+        val lowStockToggle = view.findViewById<TextView>(R.id.dashboard_low_stock_toggle)
         val recentList = view.findViewById<RecyclerView>(R.id.dashboard_recent_list)
         val recentEmpty = view.findViewById<TextView>(R.id.dashboard_recent_empty)
+        val recentToggle = view.findViewById<TextView>(R.id.dashboard_recent_toggle)
         val adapter = ProductsAdapter()
         val recentAdapter = TransactionsAdapter()
         listView.layoutManager = LinearLayoutManager(requireContext())
         listView.adapter = adapter
         recentList.layoutManager = LinearLayoutManager(requireContext())
         recentList.adapter = recentAdapter
+        lowStockToggle.setOnClickListener { viewModel.toggleLowStockExpanded() }
+        recentToggle.setOnClickListener { viewModel.toggleRecentExpanded() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    adapter.submitList(state.lowStock)
+                    val lowStockItems = if (state.lowStockExpanded) {
+                        state.lowStock
+                    } else {
+                        state.lowStock.take(2)
+                    }
+                    adapter.submitList(lowStockItems)
                     emptyView.visibility =
                         if (state.lowStock.isEmpty()) View.VISIBLE else View.GONE
-                    recentAdapter.submitList(state.recentTransactions)
+                    lowStockToggle.visibility =
+                        if (state.lowStock.size > 2) View.VISIBLE else View.GONE
+                    lowStockToggle.text = if (state.lowStockExpanded) {
+                        getString(R.string.dashboard_show_less)
+                    } else {
+                        getString(R.string.dashboard_show_all)
+                    }
+
+                    val recentItems = if (state.recentExpanded) {
+                        state.recentTransactions
+                    } else {
+                        state.recentTransactions.take(2)
+                    }
+                    recentAdapter.submitList(recentItems)
                     recentEmpty.visibility =
                         if (state.recentTransactions.isEmpty()) View.VISIBLE else View.GONE
+                    recentToggle.visibility =
+                        if (state.recentTransactions.size > 2) View.VISIBLE else View.GONE
+                    recentToggle.text = if (state.recentExpanded) {
+                        getString(R.string.dashboard_show_less)
+                    } else {
+                        getString(R.string.dashboard_show_all)
+                    }
                     if (state.errorMessage != null) {
                         android.widget.Toast.makeText(
                             requireContext(),

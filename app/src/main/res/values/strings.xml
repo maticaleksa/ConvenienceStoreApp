@@ -88,4 +88,6 @@
     <string name="login_username_hint">Username</string>
     <string name="login_password_hint">Password</string>
     <string name="login_credentials_hint">Username is admin and password is admin.</string>
+    <string name="dashboard_show_all">Show all</string>
+    <string name="dashboard_show_less">Show less</string>
 </resources>
