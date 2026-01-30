@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.SupplierEditUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.domain.SupplierRepository
 import com.aleksa.domain.model.Supplier
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,9 +41,8 @@ class SupplierEditViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<SupplierEditUiState> = _uiState.asStateFlow()
-
-    private val _saveEvents = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-    val saveEvents = _saveEvents.asSharedFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     fun onNameChanged(value: String) {
         _uiState.update { it.copy(name = value) }
@@ -76,7 +76,7 @@ class SupplierEditViewModel @Inject constructor(
                 address = state.address.trim(),
             )
             supplierRepository.upsert(supplier)
-            _saveEvents.tryEmit(Unit)
+            _events.tryEmit(UiEvent.NavigateBack)
         }
     }
 }

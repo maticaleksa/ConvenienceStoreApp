@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.domain.ProductRepository
 import com.aleksa.domain.Money
 import com.aleksa.domain.CategoryRepository
@@ -52,8 +53,6 @@ class ProductEditViewModel @Inject constructor(
     private val productSupplierPhone: String? = savedStateHandle["productSupplierPhone"]
     private val productSupplierEmail: String? = savedStateHandle["productSupplierEmail"]
     private val productSupplierAddress: String? = savedStateHandle["productSupplierAddress"]
-    private val _saveEvents = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
-    val saveEvents = _saveEvents.asSharedFlow()
     private val _uiState = MutableStateFlow(
         ProductEditUiState(
             mode = if (productId.isNullOrBlank()) {
@@ -75,6 +74,8 @@ class ProductEditViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<ProductEditUiState> = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     fun onNameChanged(value: String) {
         _uiState.update { it.copy(name = value) }
@@ -140,7 +141,7 @@ class ProductEditViewModel @Inject constructor(
                 minimumStockLevel = state.minimumStockLevel.toIntOrNull() ?: 0,
             )
             productRepository.upsert(product)
-            _saveEvents.tryEmit(Unit)
+            _events.tryEmit(UiEvent.NavigateBack)
         }
     }
 

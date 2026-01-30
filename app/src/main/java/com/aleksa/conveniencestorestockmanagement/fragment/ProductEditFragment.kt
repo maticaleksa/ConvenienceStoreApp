@@ -117,8 +117,10 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.saveEvents.collect {
-                    findNavController().popBackStack()
+                viewModel.events.collect { event ->
+                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.NavigateBack) {
+                        findNavController().popBackStack()
+                    }
                 }
             }
         }

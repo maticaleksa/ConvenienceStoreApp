@@ -25,7 +25,8 @@ open class BaseFragment(@LayoutRes layoutRes: Int) : Fragment(layoutRes) {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                baseViewModel.isOnline.collect { isOnline ->
+                baseViewModel.uiState.collect { state ->
+                    val isOnline = state.isOnline
                     val visibility = if (isOnline) View.GONE else View.VISIBLE
                     if (fragmentLabel != null) {
                         fragmentLabel.visibility = visibility

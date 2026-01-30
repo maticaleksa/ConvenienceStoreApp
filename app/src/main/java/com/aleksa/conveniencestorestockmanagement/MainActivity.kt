@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_nav)
 
         lifecycleScope.launch {
-            val startDestination = authViewModel.startDestination.first()
+            val startDestination = authViewModel.uiState.first().startDestination
             val targetGraph = when (startDestination) {
                 StartDestination.Main -> R.navigation.main_nav_graph
                 StartDestination.Auth -> R.navigation.auth_nav_graph
@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.isAuthenticated.collect { isAuthenticated ->
+                authViewModel.uiState.collect { state ->
+                    val isAuthenticated = state.isAuthenticated
                     val targetGraph = if (isAuthenticated) {
                         R.navigation.main_nav_graph
                     } else {

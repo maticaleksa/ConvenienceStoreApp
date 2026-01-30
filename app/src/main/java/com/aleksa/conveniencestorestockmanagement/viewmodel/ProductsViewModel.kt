@@ -41,14 +41,14 @@ class ProductsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     private val searchQuery = MutableStateFlow("")
     private val selectedCategoryIds = MutableStateFlow<Set<String>>(emptySet())
     private val syncChannel = syncCoordinator.getOrCreateChannel(ProductsSyncChannelKey)
     private val _addProductEvents = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val addProductEvents = _addProductEvents.asSharedFlow()
-    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
-    val events = _events.asSharedFlow()
 
     init {
         observeProducts()

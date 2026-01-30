@@ -5,16 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.auth.AuthManager
 import com.aleksa.conveniencestorestockmanagement.domain.AuthRepository
 import com.aleksa.conveniencestorestockmanagement.domain.GetStartDestinationUseCase
-import com.aleksa.conveniencestorestockmanagement.navigation.StartDestination
+import com.aleksa.conveniencestorestockmanagement.uistate.AuthUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.network.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,17 +25,24 @@ class AuthViewModel @Inject constructor(
     private val getStartDestinationUseCase: GetStartDestinationUseCase,
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    val isAuthenticated: StateFlow<Boolean> = authManager.isAuthenticated
-    val startDestination: StateFlow<StartDestination> =
-        authManager.isAuthenticated
-            .map { isAuthenticated -> getStartDestinationUseCase(isAuthenticated) }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.Eagerly,
-                getStartDestinationUseCase(authManager.isAuthenticated.value),
+    private val _uiState = authManager.isAuthenticated
+        .map { isAuthenticated ->
+            AuthUiState(
+                isAuthenticated = isAuthenticated,
+                startDestination = getStartDestinationUseCase(isAuthenticated),
             )
-    private val _loginError = MutableStateFlow<String?>(null)
-    val loginError: StateFlow<String?> = _loginError.asStateFlow()
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            AuthUiState(
+                isAuthenticated = authManager.isAuthenticated.value,
+                startDestination = getStartDestinationUseCase(authManager.isAuthenticated.value),
+            ),
+        )
+    val uiState: StateFlow<AuthUiState> = _uiState
+    private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    val events = _events.asSharedFlow()
 
     fun onLogin(username: String, password: String) {
         viewModelScope.launch {
@@ -42,20 +51,16 @@ class AuthViewModel @Inject constructor(
                     if (result.data) {
                         authManager.setAuthenticated(true)
                     } else {
-                        _loginError.value = "Username or password is incorrect"
+                        _events.tryEmit(UiEvent.Message("Username or password is incorrect"))
                         authManager.setAuthenticated(false)
                     }
                 }
                 is NetworkResult.Error -> {
-                    _loginError.value = result.error.message ?: "Login failed"
+                    _events.tryEmit(UiEvent.Message(result.error.message ?: "Login failed"))
                     authManager.setAuthenticated(false)
                 }
             }
         }
-    }
-
-    fun clearLoginError() {
-        _loginError.value = null
     }
 
     fun onLogout() {

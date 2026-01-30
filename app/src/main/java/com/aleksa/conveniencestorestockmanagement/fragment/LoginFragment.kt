@@ -30,19 +30,18 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.loginError.collect { message ->
-                    if (message != null) {
-                        val displayMessage = if (message == "No network connection") {
+                viewModel.events.collect { event ->
+                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
+                        val displayMessage = if (event.text == "No network connection") {
                             getString(R.string.no_internet)
                         } else {
-                            message
+                            event.text
                         }
                         android.widget.Toast.makeText(
                             requireContext(),
                             displayMessage,
                             android.widget.Toast.LENGTH_LONG
                         ).show()
-                        viewModel.clearLoginError()
                     }
                 }
             }
