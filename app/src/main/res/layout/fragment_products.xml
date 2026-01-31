@@ -10,90 +10,79 @@
         android:orientation="vertical"
         android:paddingBottom="16dp">
 
-        <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-            <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/products_toolbar"
+        <LinearLayout
+            android:id="@+id/products_search_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/nav_products" />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <LinearLayout
-        android:id="@+id/products_search_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            android:layout_marginHorizontal="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/products_search_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            style="@style/Widget.ConvenienceStore.SearchInputLayout"
-            app:hintEnabled="true"
-            app:startIconDrawable="@android:drawable/ic_menu_search">
+                android:id="@+id/products_search_container"
+                style="@style/Widget.ConvenienceStore.SearchInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:hintEnabled="true"
+                app:startIconDrawable="@android:drawable/ic_menu_search">
 
                 <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/products_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.ConvenienceStore.SearchEditText"
-                android:hint="@string/products_search_hint"
-                android:imeOptions="actionSearch"
-                android:singleLine="true"
-                android:inputType="text" />
+                    android:id="@+id/products_search"
+                    style="@style/Widget.ConvenienceStore.SearchEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/products_search_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/products_clear_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/products_clear_search"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/bottom_nav_item_unselected" />
+                android:id="@+id/products_clear_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_8"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/products_clear_search"
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/bottom_nav_item_unselected" />
 
             <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/products_filter_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/products_filter"
-            app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-            app:tint="@color/bottom_nav_item_unselected" />
+                android:id="@+id/products_filter_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_8"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/products_filter"
+                app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+                app:tint="@color/bottom_nav_item_unselected" />
         </LinearLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/products_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_12"
-        android:layout_weight="1">
+            android:id="@+id/products_swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_12"
+            android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/products_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="@dimen/spacing_16" />
+                android:id="@+id/products_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/spacing_16" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
-        android:id="@+id/products_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_16"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:text="@string/empty_products"
-        android:textSize="16sp"
-        android:visibility="gone" />
+            android:id="@+id/products_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:text="@string/empty_products"
+            android:textSize="16sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

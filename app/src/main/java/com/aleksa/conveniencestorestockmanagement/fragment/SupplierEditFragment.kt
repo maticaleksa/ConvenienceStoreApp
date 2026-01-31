@@ -13,7 +13,6 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.SupplierEditUiState
 import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SupplierEditViewModel
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,7 +23,7 @@ class SupplierEditFragment : BaseFragment(R.layout.fragment_supplier_edit) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.supplier_edit_toolbar)
+        val toolbar = getToolbar()
         val nameInput = view.findViewById<TextInputEditText>(R.id.supplier_edit_name)
         val contactInput = view.findViewById<TextInputEditText>(R.id.supplier_edit_contact)
         val phoneInput = view.findViewById<TextInputEditText>(R.id.supplier_edit_phone)
@@ -32,8 +31,8 @@ class SupplierEditFragment : BaseFragment(R.layout.fragment_supplier_edit) {
         val addressInput = view.findViewById<TextInputEditText>(R.id.supplier_edit_address)
         val saveButton = view.findViewById<AppCompatButton>(R.id.supplier_edit_save_button)
 
-        toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
-        toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+        toolbar?.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
+        toolbar?.setNavigationOnClickListener { findNavController().popBackStack() }
 
         nameInput.doAfterTextChanged { viewModel.onNameChanged(it?.toString().orEmpty()) }
         contactInput.doAfterTextChanged { viewModel.onContactPersonChanged(it?.toString().orEmpty()) }
@@ -45,7 +44,7 @@ class SupplierEditFragment : BaseFragment(R.layout.fragment_supplier_edit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    toolbar.setTitle(R.string.supplier_edit_title)
+                    toolbar?.setTitle(R.string.supplier_edit_title)
                     if (nameInput.text?.toString() != state.name) {
                         nameInput.setText(state.name)
                     }

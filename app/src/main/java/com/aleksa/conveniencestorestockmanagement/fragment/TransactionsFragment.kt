@@ -27,6 +27,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarTitle(R.string.nav_transactions)
         val listView = view.findViewById<RecyclerView>(R.id.transactions_list)
         val swipeRefresh =
             view.findViewById<SwipeRefreshLayout>(R.id.transactions_swipe_refresh)

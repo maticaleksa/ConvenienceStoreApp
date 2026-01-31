@@ -1,101 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dashboard_swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/dashboard_toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/nav_dashboard" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_16">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/dashboard_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/dashboard_low_stock_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_16">
+                android:layout_marginTop="@dimen/spacing_16"
+                android:text="@string/dashboard_low_stock_title"
+                android:textAppearance="@style/TextAppearance.ConvenienceStore.SectionTitle" />
 
-        <TextView
-            android:id="@+id/dashboard_low_stock_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:text="@string/dashboard_low_stock_title"
-            android:textAppearance="@style/TextAppearance.ConvenienceStore.SectionTitle" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dashboard_low_stock_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:nestedScrollingEnabled="false" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dashboard_low_stock_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:nestedScrollingEnabled="false" />
+            <TextView
+                android:id="@+id/dashboard_low_stock_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/dashboard_show_all"
+                android:textColor="@color/bottom_nav_item_color"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/dashboard_low_stock_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:text="@string/dashboard_show_all"
-            android:textColor="@color/bottom_nav_item_color"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/dashboard_low_stock_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:text="@string/dashboard_low_stock_empty"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/dashboard_low_stock_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:text="@string/dashboard_low_stock_empty"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/dashboard_recent_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_20"
+                android:text="@string/dashboard_recent_transactions"
+                android:textAppearance="@style/TextAppearance.ConvenienceStore.SectionTitle" />
 
-        <TextView
-            android:id="@+id/dashboard_recent_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_20"
-            android:text="@string/dashboard_recent_transactions"
-            android:textAppearance="@style/TextAppearance.ConvenienceStore.SectionTitle" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dashboard_recent_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:nestedScrollingEnabled="false" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/dashboard_recent_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:nestedScrollingEnabled="false" />
+            <TextView
+                android:id="@+id/dashboard_recent_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/dashboard_show_all"
+                android:textColor="@color/bottom_nav_item_color"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/dashboard_recent_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:text="@string/dashboard_show_all"
-            android:textColor="@color/bottom_nav_item_color"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/dashboard_recent_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:text="@string/dashboard_recent_empty"
-            android:visibility="gone" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+            <TextView
+                android:id="@+id/dashboard_recent_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:text="@string/dashboard_recent_empty"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

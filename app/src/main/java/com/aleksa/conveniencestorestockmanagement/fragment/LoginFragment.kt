@@ -21,6 +21,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarVisible(false)
         val usernameInput = view.findViewById<AppCompatEditText>(R.id.login_username)
         val passwordInput = view.findViewById<AppCompatEditText>(R.id.login_password)
         val loginButton = view.findViewById<AppCompatButton>(R.id.login_primary_button)

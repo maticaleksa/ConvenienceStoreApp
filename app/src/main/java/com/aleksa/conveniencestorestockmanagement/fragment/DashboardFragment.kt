@@ -25,6 +25,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarTitle(R.string.nav_dashboard)
         val swipeRefresh =
             view.findViewById<SwipeRefreshLayout>(R.id.dashboard_swipe_refresh)
         val rootView = view

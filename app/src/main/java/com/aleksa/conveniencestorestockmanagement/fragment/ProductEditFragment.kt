@@ -16,7 +16,6 @@ import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductEditViewModel
 import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Supplier
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,7 +32,7 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<MaterialToolbar>(R.id.product_edit_toolbar)
+        val toolbar = getToolbar()
         val nameInput = view.findViewById<TextInputEditText>(R.id.product_edit_name)
         val descriptionInput =
             view.findViewById<TextInputEditText>(R.id.product_edit_description)
@@ -48,8 +47,8 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
         val saveButton =
             view.findViewById<AppCompatButton>(R.id.product_edit_save_button)
 
-        toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
-        toolbar.setNavigationOnClickListener {
+        toolbar?.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
+        toolbar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
 
@@ -81,7 +80,7 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
                 viewModel.uiState.collect { state ->
                     categories = state.categories
                     suppliers = state.suppliers
-                    toolbar.setTitle(
+                    toolbar?.setTitle(
                         if (state.mode == ProductEditUiState.Mode.ADD) {
                             R.string.product_add_title
                         } else {

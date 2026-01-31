@@ -30,6 +30,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarTitle(R.string.nav_products)
         val listView = view.findViewById<RecyclerView>(R.id.products_list)
         val swipeRefresh =
             view.findViewById<SwipeRefreshLayout>(R.id.products_swipe_refresh)

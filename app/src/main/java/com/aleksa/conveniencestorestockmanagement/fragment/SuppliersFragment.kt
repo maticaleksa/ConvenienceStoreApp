@@ -28,6 +28,7 @@ class SuppliersFragment : BaseFragment(R.layout.fragment_suppliers) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarTitle(R.string.nav_suppliers)
         val listView = view.findViewById<RecyclerView>(R.id.suppliers_list)
         val swipeRefresh = view.findViewById<SwipeRefreshLayout>(R.id.suppliers_swipe_refresh)
         val emptyView = view.findViewById<TextView>(R.id.suppliers_empty)

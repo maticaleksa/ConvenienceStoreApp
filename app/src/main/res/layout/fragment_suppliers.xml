@@ -5,17 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/suppliers_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/nav_suppliers" />
-    </com.google.android.material.appbar.AppBarLayout>
-
     <LinearLayout
         android:id="@+id/suppliers_search_row"
         android:layout_width="match_parent"
@@ -49,7 +38,7 @@
             android:id="@+id/suppliers_clear_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/spacing_8"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/suppliers_clear_search"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"

@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class StockFragment : BaseFragment(R.layout.fragment_stock) {
     override fun onViewCreated(view: View, savedInstanceState: android.os.Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarTitle(R.string.nav_stock)
 
         val tabLayout = view.findViewById<TabLayout>(R.id.stock_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.stock_pager)

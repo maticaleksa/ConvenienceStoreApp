@@ -9,17 +9,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/stock_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/nav_stock" />
-        </com.google.android.material.appbar.AppBarLayout>
-
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/stock_tabs"
             android:layout_width="match_parent"

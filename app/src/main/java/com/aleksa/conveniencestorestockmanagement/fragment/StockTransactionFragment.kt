@@ -56,6 +56,7 @@ class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transactio
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setToolbarVisible(false)
 
         val productInput = view.findViewById<AppCompatAutoCompleteTextView>(
             R.id.stock_transaction_product

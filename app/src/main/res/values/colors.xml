@@ -15,6 +15,8 @@
     <color name="bottom_nav_background">@color/app_surface</color>
     <color name="bottom_nav_item_selected">#FF000000</color>
     <color name="bottom_nav_item_unselected">#8A000000</color>
+    <color name="bottom_nav_active_indicator">#14000000</color>
+    <color name="bottom_nav_ripple">#1A000000</color>
     <color name="product_category_bg">#E6F4EA</color>
     <color name="product_category_text">#1B5E20</color>
     <color name="product_supplier_bg">#E8F0FE</color>

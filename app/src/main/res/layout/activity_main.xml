@@ -30,7 +30,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bottom_nav_background"
+        android:paddingTop="@dimen/spacing_4"
+        android:paddingBottom="@dimen/spacing_8"
         app:itemIconTint="@color/bottom_nav_item_color"
+        app:itemIconSize="22dp"
+        app:itemRippleColor="@color/bottom_nav_ripple"
+        app:itemTextAppearanceActive="@style/TextAppearance.ConvenienceStore.BottomNavLabel"
+        app:itemTextAppearanceInactive="@style/TextAppearance.ConvenienceStore.BottomNavLabel"
         app:itemTextColor="@color/bottom_nav_item_color"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
