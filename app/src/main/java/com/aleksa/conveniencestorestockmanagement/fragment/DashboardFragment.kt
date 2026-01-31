@@ -9,9 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.ProductsAdapter
 import com.aleksa.conveniencestorestockmanagement.adapter.TransactionsAdapter
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.DashboardViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +26,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val swipeRefresh =
-            view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
-                R.id.dashboard_swipe_refresh
-            )
+            view.findViewById<SwipeRefreshLayout>(R.id.dashboard_swipe_refresh)
         val rootView = view
         val listView = view.findViewById<RecyclerView>(R.id.dashboard_low_stock_list)
         val emptyView = view.findViewById<TextView>(R.id.dashboard_low_stock_empty)
@@ -88,7 +88,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
+                    if (event is UiEvent.Message) {
                         Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }

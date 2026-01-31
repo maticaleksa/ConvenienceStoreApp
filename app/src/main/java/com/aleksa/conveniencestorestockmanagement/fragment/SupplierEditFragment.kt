@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.SupplierEditUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SupplierEditViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
@@ -67,7 +68,7 @@ class SupplierEditFragment : BaseFragment(R.layout.fragment_supplier_edit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.NavigateBack) {
+                    if (event is UiEvent.NavigateBack) {
                         findNavController().popBackStack()
                     }
                 }

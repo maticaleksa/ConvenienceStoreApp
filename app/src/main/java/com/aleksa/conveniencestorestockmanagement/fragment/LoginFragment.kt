@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleksa.conveniencestorestockmanagement.R
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.AuthViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
+                    if (event is UiEvent.Message) {
                         val displayMessage = if (event.text == "No network connection") {
                             getString(R.string.no_internet)
                         } else {

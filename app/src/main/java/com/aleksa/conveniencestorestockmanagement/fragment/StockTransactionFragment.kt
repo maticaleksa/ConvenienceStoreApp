@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.StockUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.BaseStockViewModel
 import com.aleksa.conveniencestorestockmanagement.viewmodel.StockAddViewModel
 import com.aleksa.conveniencestorestockmanagement.viewmodel.StockSaleViewModel
@@ -170,7 +171,7 @@ class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transactio
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
+                    if (event is UiEvent.Message) {
                         Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }

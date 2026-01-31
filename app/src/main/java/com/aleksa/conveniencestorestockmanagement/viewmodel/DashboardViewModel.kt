@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.aleksa.conveniencestorestockmanagement.uistate.DashboardUiState
 import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.core.arch.event.DataCommandBus
+import com.aleksa.core.arch.sync.SyncChannel
 import com.aleksa.core.arch.sync.SyncCoordinator
 import com.aleksa.core.arch.sync.SyncState
 import com.aleksa.data.repository.TransactionsSyncChannelKey
@@ -67,7 +68,7 @@ class DashboardViewModel @Inject constructor(
         observeSyncChannelErrors(transactionsSyncChannel)
     }
 
-    private fun observeSyncChannelErrors(channel: com.aleksa.core.arch.sync.SyncChannel) {
+    private fun observeSyncChannelErrors(channel: SyncChannel) {
         channel.state
             .onEach { state ->
                 if (state is SyncState.Error) {

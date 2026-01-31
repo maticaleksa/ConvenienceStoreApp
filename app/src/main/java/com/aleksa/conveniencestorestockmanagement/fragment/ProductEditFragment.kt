@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductEditViewModel
 import com.aleksa.domain.model.Category
 import com.aleksa.domain.model.Supplier
@@ -118,7 +119,7 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.NavigateBack) {
+                    if (event is UiEvent.NavigateBack) {
                         findNavController().popBackStack()
                     }
                 }

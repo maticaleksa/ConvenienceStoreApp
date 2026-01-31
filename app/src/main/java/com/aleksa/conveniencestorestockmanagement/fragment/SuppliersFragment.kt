@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.SuppliersAdapter
+import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SuppliersViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.snackbar.Snackbar
@@ -81,7 +82,7 @@ class SuppliersFragment : BaseFragment(R.layout.fragment_suppliers) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
+                    if (event is UiEvent.Message) {
                         Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }
