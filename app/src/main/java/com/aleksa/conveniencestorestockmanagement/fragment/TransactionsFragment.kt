@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +16,7 @@ import com.aleksa.conveniencestorestockmanagement.adapter.TransactionsAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.TransactionsViewModel
 import com.aleksa.domain.model.TransactionType
 import com.aleksa.domain.usecases.TransactionDateFilter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -67,7 +67,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
             types[index] in selectedTypes
         }
         val pending = selectedTypes.toMutableSet()
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.transactions_filter_title)
             .setMultiChoiceItems(items, checked) { _, which, isChecked ->
                 val type = types[which]
@@ -136,7 +136,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
             pendingDate = dateOptions[which]
         }
 
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.transactions_filter_title)
             .setView(content)
             .setPositiveButton(R.string.transactions_filter_apply) { _, _ ->

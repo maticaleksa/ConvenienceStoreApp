@@ -17,6 +17,7 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.SuppliersAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SuppliersViewModel
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -56,6 +57,7 @@ class SuppliersFragment : BaseFragment(R.layout.fragment_suppliers) {
             viewModel.refresh()
         }
 
+        val rootView = view
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
@@ -80,11 +82,7 @@ class SuppliersFragment : BaseFragment(R.layout.fragment_suppliers) {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
                     if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
-                        android.widget.Toast.makeText(
-                            requireContext(),
-                            event.text,
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
+                        Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }

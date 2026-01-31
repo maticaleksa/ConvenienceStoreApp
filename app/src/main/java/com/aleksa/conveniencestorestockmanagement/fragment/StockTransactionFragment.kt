@@ -18,6 +18,7 @@ import com.aleksa.conveniencestorestockmanagement.viewmodel.BaseStockViewModel
 import com.aleksa.conveniencestorestockmanagement.viewmodel.StockAddViewModel
 import com.aleksa.conveniencestorestockmanagement.viewmodel.StockSaleViewModel
 import com.aleksa.domain.model.TransactionType
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -165,15 +166,12 @@ class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transactio
             }
         }
 
+        val rootView = view
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
                     if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
-                        android.widget.Toast.makeText(
-                            requireContext(),
-                            event.text,
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
+                        Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }

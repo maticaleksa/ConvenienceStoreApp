@@ -13,6 +13,7 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.adapter.ProductsAdapter
 import com.aleksa.conveniencestorestockmanagement.adapter.TransactionsAdapter
 import com.aleksa.conveniencestorestockmanagement.viewmodel.DashboardViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
             view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(
                 R.id.dashboard_swipe_refresh
             )
+        val rootView = view
         val listView = view.findViewById<RecyclerView>(R.id.dashboard_low_stock_list)
         val emptyView = view.findViewById<TextView>(R.id.dashboard_low_stock_empty)
         val lowStockToggle = view.findViewById<TextView>(R.id.dashboard_low_stock_toggle)
@@ -87,11 +89,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
                     if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
-                        android.widget.Toast.makeText(
-                            requireContext(),
-                            event.text,
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
+                        Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }

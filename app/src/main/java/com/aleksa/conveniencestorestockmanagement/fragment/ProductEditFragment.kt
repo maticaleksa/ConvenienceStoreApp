@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.ProductEditUiState
 import com.aleksa.conveniencestorestockmanagement.viewmodel.ProductEditViewModel
@@ -129,7 +129,7 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
     private fun showCategoryDialog() {
         if (categories.isEmpty()) return
         val items = categories.map { it.name }.toTypedArray()
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.product_category_select_title)
             .setItems(items) { _, which ->
                 viewModel.onCategorySelected(categories[which])
@@ -141,7 +141,7 @@ class ProductEditFragment : BaseFragment(R.layout.fragment_product_edit) {
     private fun showSupplierDialog() {
         if (suppliers.isEmpty()) return
         val items = suppliers.map { it.name }.toTypedArray()
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.product_supplier_select_title)
             .setItems(items) { _, which ->
                 viewModel.onSupplierSelected(suppliers[which])

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.viewmodel.AuthViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             viewModel.onLogin(username, password)
         }
 
+        val rootView = view
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
@@ -37,11 +39,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
                         } else {
                             event.text
                         }
-                        android.widget.Toast.makeText(
-                            requireContext(),
-                            displayMessage,
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
+                        Snackbar.make(rootView, displayMessage, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }

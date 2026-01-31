@@ -1,7 +1,8 @@
 package com.aleksa.conveniencestorestockmanagement.fragment
 
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -81,6 +82,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
             viewModel.refresh()
         }
 
+        val rootView = view
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
@@ -111,11 +113,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
                     if (event is com.aleksa.conveniencestorestockmanagement.uistate.UiEvent.Message) {
-                        android.widget.Toast.makeText(
-                            requireContext(),
-                            event.text,
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
+                        Snackbar.make(rootView, event.text, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }
@@ -137,7 +135,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
             currentCategories[index].id in selectedCategoryIds
         }
         val pending = selectedCategoryIds.toMutableSet()
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.products_filter_categories_title)
             .setMultiChoiceItems(items, checked) { _, which, isChecked ->
                 val id = currentCategories[which].id
