@@ -49,15 +49,31 @@
                 app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
                 app:tint="@color/bottom_nav_item_unselected" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/products_filter_button"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_8"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/products_filter"
-                app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-                app:tint="@color/bottom_nav_item_unselected" />
+                android:layout_marginStart="@dimen/spacing_8">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/products_filter_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/products_filter"
+                    app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+                    app:tint="@color/bottom_nav_item_unselected" />
+
+                <View
+                    android:id="@+id/products_filter_badge"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:background="@drawable/filter_badge_dot"
+                    android:contentDescription="@null"
+                    android:visibility="gone" />
+            </FrameLayout>
         </LinearLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

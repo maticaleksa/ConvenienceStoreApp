@@ -23,4 +23,5 @@
     <color name="product_supplier_text">#1A237E</color>
     <color name="warning_bg">#FFF8E1</color>
     <color name="warning_text">#8A5A00</color>
+    <color name="text_selection_highlight">#331A73E8</color>
 </resources>

@@ -41,6 +41,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
             view.findViewById<AppCompatImageButton>(R.id.products_clear_button)
         val filterButton =
             view.findViewById<AppCompatImageButton>(R.id.products_filter_button)
+        val filterBadge = view.findViewById<android.view.View>(R.id.products_filter_badge)
         val addFab =
             view.findViewById<FloatingActionButton>(R.id.products_add_fab)
         val adapter = ProductsAdapter { product ->
@@ -89,6 +90,12 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
                 viewModel.uiState.collect { state ->
                     currentCategories = state.categories
                     selectedCategoryIds = state.selectedCategoryIds
+                    filterBadge.visibility =
+                        if (state.selectedCategoryIds.isNotEmpty()) {
+                            android.view.View.VISIBLE
+                        } else {
+                            android.view.View.GONE
+                        }
                     adapter.submitList(state.items)
                     if (searchInput.text?.toString() != state.searchQuery) {
                         searchInput.setText(state.searchQuery)

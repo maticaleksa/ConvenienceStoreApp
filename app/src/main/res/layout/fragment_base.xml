@@ -8,6 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/base_app_bar"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -15,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:contentInsetStart="@dimen/spacing_16"
+            android:background="@color/white"
             app:contentInsetStartWithNavigation="@dimen/spacing_16"
             app:titleMarginTop="@dimen/spacing_8"
             app:titleMarginBottom="@dimen/spacing_8"

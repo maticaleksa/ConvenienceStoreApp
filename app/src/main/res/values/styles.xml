@@ -59,4 +59,16 @@
         <item name="android:textColor">@color/app_secondary</item>
     </style>
 
+    <style name="Widget.ConvenienceStore.OutlinedInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/bottom_nav_item_unselected</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="hintTextColor">@color/text_input_hint_color</item>
+        <item name="boxCornerRadiusTopStart">@dimen/spacing_12</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/spacing_12</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/spacing_12</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/spacing_12</item>
+    </style>
+
 </resources>

@@ -33,6 +33,7 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
             view.findViewById<SwipeRefreshLayout>(R.id.transactions_swipe_refresh)
         val emptyView = view.findViewById<TextView>(R.id.transactions_empty)
         val filterButton = view.findViewById<AppCompatImageButton>(R.id.transactions_filter_button)
+        val filterBadge = view.findViewById<View>(R.id.transactions_filter_badge)
         val adapter = TransactionsAdapter()
         listView.layoutManager = LinearLayoutManager(requireContext())
         listView.adapter = adapter
@@ -46,6 +47,14 @@ class TransactionsFragment : BaseFragment(R.layout.fragment_transactions) {
                     adapter.submitList(state.items)
                     selectedTypes = state.selectedTypes
                     dateFilter = state.dateFilter
+                    filterBadge.visibility =
+                        if (state.selectedTypes.isNotEmpty()
+                            || state.dateFilter != TransactionDateFilter.ALL
+                        ) {
+                            View.VISIBLE
+                        } else {
+                            View.GONE
+                        }
                     emptyView.visibility =
                         if (state.isEmpty) View.VISIBLE else View.GONE
                     swipeRefresh.isRefreshing = state.isSyncing

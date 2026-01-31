@@ -21,14 +21,30 @@
             android:layout_weight="1"
             android:text="@string/transactions_filter_label" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/transactions_filter_button"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/transactions_filter"
-            app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-            app:tint="@color/bottom_nav_item_unselected" />
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/transactions_filter_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/transactions_filter"
+                app:srcCompat="@android:drawable/ic_menu_sort_by_size"
+                app:tint="@color/bottom_nav_item_unselected" />
+
+            <View
+                android:id="@+id/transactions_filter_badge"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/filter_badge_dot"
+                android:contentDescription="@null"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

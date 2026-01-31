@@ -12,17 +12,17 @@
         android:padding="@dimen/spacing_24">
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.ConvenienceStore.SearchInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.ConvenienceStore.SearchInputLayout"
             android:hint="@string/stock_product"
             app:startIconDrawable="@android:drawable/ic_menu_search">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/stock_transaction_product"
+                style="@style/Widget.ConvenienceStore.SearchAutoComplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.ConvenienceStore.SearchAutoComplete"
                 android:imeOptions="actionNext"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -30,9 +30,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            android:layout_marginTop="@dimen/spacing_8"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/stock_transaction_current_label"
@@ -52,9 +52,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_12"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+            android:layout_marginTop="@dimen/spacing_12"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/stock_transaction_decrement"
@@ -69,9 +69,9 @@
                 android:id="@+id/stock_transaction_quantity_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/spacing_12"
-            android:layout_weight="1"
-            android:hint="@string/stock_add_quantity">
+                android:layout_marginHorizontal="@dimen/spacing_12"
+                android:layout_weight="1"
+                android:hint="@string/stock_add_quantity">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/stock_transaction_quantity"
@@ -92,24 +92,26 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.ConvenienceStore.OutlinedInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_12"
-        android:hint="@string/stock_notes">
+            android:layout_marginTop="@dimen/spacing_12"
+            android:hint="@string/stock_notes">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/stock_transaction_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
-                android:minLines="3" />
+                android:minLines="3"
+                android:textCursorDrawable="@drawable/text_cursor" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/stock_transaction_save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:text="@string/stock_save_changes" />
+            android:layout_marginTop="@dimen/spacing_16"
+            android:text="@string/stock_save_changes" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
