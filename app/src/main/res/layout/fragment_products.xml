@@ -25,8 +25,8 @@
         android:id="@+id/products_search_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -73,22 +73,22 @@
         android:id="@+id/products_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/spacing_12"
         android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="16dp" />
+            android:paddingHorizontal="@dimen/spacing_16" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
         android:id="@+id/products_empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
         android:text="@string/empty_products"
         android:textSize="16sp"
         android:visibility="gone" />

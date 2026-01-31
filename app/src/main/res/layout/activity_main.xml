@@ -17,11 +17,11 @@
         android:id="@+id/no_internet_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF3CD"
+        android:background="@color/warning_bg"
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:text="@string/no_internet"
-        android:textColor="#7A5B00"
+        android:textColor="@color/warning_text"
         android:textSize="12sp"
         android:visibility="gone" />
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="@dimen/spacing_24">
 
     <TextView
         android:id="@+id/login_title"
@@ -18,12 +18,12 @@
         android:id="@+id/no_internet_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="#FFF3CD"
+        android:layout_marginTop="@dimen/spacing_12"
+        android:background="@color/warning_bg"
         android:paddingHorizontal="16dp"
         android:paddingVertical="6dp"
         android:text="@string/no_internet"
-        android:textColor="#7A5B00"
+        android:textColor="@color/warning_text"
         android:textSize="12sp"
         android:visibility="gone" />
 
@@ -31,7 +31,7 @@
         android:id="@+id/login_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_16"
         android:autofillHints="username"
         android:hint="@string/login_username_hint"
         android:inputType="textPersonName" />
@@ -40,7 +40,7 @@
         android:id="@+id/login_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/spacing_12"
         android:autofillHints="password"
         android:hint="@string/login_password_hint"
         android:inputType="textPassword" />
@@ -49,7 +49,7 @@
         android:id="@+id/login_credentials_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/spacing_12"
         android:text="@string/login_credentials_hint"
         android:textSize="12sp" />
 
@@ -57,6 +57,6 @@
         android:id="@+id/login_primary_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_16"
         android:text="@string/login_button" />
 </LinearLayout>

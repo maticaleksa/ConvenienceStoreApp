@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="@dimen/spacing_24">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -27,9 +27,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/stock_transaction_current_label"
@@ -49,9 +49,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        android:layout_marginTop="@dimen/spacing_12"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/stock_transaction_decrement"
@@ -66,9 +66,9 @@
                 android:id="@+id/stock_transaction_quantity_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:layout_weight="1"
-                android:hint="@string/stock_add_quantity">
+            android:layout_marginHorizontal="@dimen/spacing_12"
+            android:layout_weight="1"
+            android:hint="@string/stock_add_quantity">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/stock_transaction_quantity"
@@ -91,8 +91,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="@string/stock_notes">
+        android:layout_marginTop="@dimen/spacing_12"
+        android:hint="@string/stock_notes">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/stock_transaction_notes"
@@ -106,7 +106,7 @@
             android:id="@+id/stock_transaction_save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/stock_save_changes" />
+        android:layout_marginTop="@dimen/spacing_16"
+        android:text="@string/stock_save_changes" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -7,29 +7,17 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/products_filter_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/transactions_filter_type_label"
+        android:text="@string/products_filter_categories_title"
         android:textStyle="bold" />
 
     <ListView
-        android:id="@+id/transaction_filter_types"
+        android:id="@+id/products_filter_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:choiceMode="multipleChoice" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/transactions_filter_date_label"
-        android:textStyle="bold" />
-
-    <ListView
-        android:id="@+id/transaction_filter_dates"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:choiceMode="singleChoice" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,17 +27,17 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/transaction_filter_clear"
+            android:id="@+id/products_filter_clear"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/transactions_filter_clear" />
+            android:text="@string/products_filter_clear" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/transaction_filter_apply"
+            android:id="@+id/products_filter_apply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="@string/transactions_filter_apply" />
+            android:text="@string/products_filter_apply" />
     </LinearLayout>
 </LinearLayout>

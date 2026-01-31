@@ -1,7 +1,6 @@
 package com.aleksa.conveniencestorestockmanagement.fragment
 
 import android.widget.TextView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.doAfterTextChanged
@@ -74,7 +73,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
             searchInput.setText("")
         }
         filterButton.setOnClickListener {
-            showCategoryFilterDialog()
+            showCategoryFilterBottomSheet()
         }
         addFab.setOnClickListener {
             viewModel.onAddProductClicked()
@@ -127,28 +126,25 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
                 }
             }
         }
+
+        parentFragmentManager.setFragmentResultListener(
+            ProductsFilterBottomSheetFragment.RESULT_KEY,
+            viewLifecycleOwner,
+        ) { _, bundle ->
+            val selectedIds =
+                bundle.getStringArrayList(ProductsFilterBottomSheetFragment.RESULT_SELECTED_IDS)
+                    ?.toSet()
+                    ?: emptySet()
+            viewModel.updateSelectedCategories(selectedIds)
+        }
     }
 
-    private fun showCategoryFilterDialog() {
+    private fun showCategoryFilterBottomSheet() {
         if (currentCategories.isEmpty()) return
-        val items = currentCategories.map { it.name }.toTypedArray()
-        val checked = BooleanArray(currentCategories.size) { index ->
-            currentCategories[index].id in selectedCategoryIds
-        }
-        val pending = selectedCategoryIds.toMutableSet()
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.products_filter_categories_title)
-            .setMultiChoiceItems(items, checked) { _, which, isChecked ->
-                val id = currentCategories[which].id
-                if (isChecked) pending.add(id) else pending.remove(id)
-            }
-            .setPositiveButton(R.string.products_filter_apply) { _, _ ->
-                viewModel.updateSelectedCategories(pending)
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .setNeutralButton(R.string.products_filter_clear) { _, _ ->
-                viewModel.updateSelectedCategories(emptySet())
-            }
-            .show()
+        val ids = currentCategories.map { it.id }
+        val names = currentCategories.map { it.name }
+        ProductsFilterBottomSheetFragment
+            .newInstance(ids, names, selectedCategoryIds)
+            .show(parentFragmentManager, "products_filter")
     }
 }
