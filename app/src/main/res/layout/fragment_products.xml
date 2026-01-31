@@ -35,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/Widget.ConvenienceStore.SearchInputLayout"
             app:hintEnabled="true"
             app:startIconDrawable="@android:drawable/ic_menu_search">
 
@@ -42,6 +43,7 @@
                 android:id="@+id/products_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.ConvenienceStore.SearchEditText"
                 android:hint="@string/products_search_hint"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"

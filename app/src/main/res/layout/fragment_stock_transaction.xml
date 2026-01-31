@@ -14,12 +14,15 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/stock_product">
+            style="@style/Widget.ConvenienceStore.SearchInputLayout"
+            android:hint="@string/stock_product"
+            app:startIconDrawable="@android:drawable/ic_menu_search">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/stock_transaction_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/Widget.ConvenienceStore.SearchAutoComplete"
                 android:imeOptions="actionNext"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
