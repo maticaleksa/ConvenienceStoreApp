@@ -63,7 +63,12 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun observeSyncErrors() {
-        productsSyncChannel.state
+        observeSyncChannelErrors(productsSyncChannel)
+        observeSyncChannelErrors(transactionsSyncChannel)
+    }
+
+    private fun observeSyncChannelErrors(channel: com.aleksa.core.arch.sync.SyncChannel) {
+        channel.state
             .onEach { state ->
                 if (state is SyncState.Error) {
                     val message = state.error.message
