@@ -49,4 +49,14 @@
         <item name="android:paddingTop">@dimen/spacing_8</item>
     </style>
 
+    <style name="Widget.ConvenienceStore.BottomSheetButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/app_secondary</item>
+        <item name="android:textColor">@color/app_on_secondary</item>
+    </style>
+
+    <style name="Widget.ConvenienceStore.BottomSheetButton.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/app_secondary</item>
+        <item name="android:textColor">@color/app_secondary</item>
+    </style>
+
 </resources>
