@@ -7,6 +7,12 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Central registry for [SyncChannel] instances used by repositories and viewmodels.
+ *
+ * Each feature requests a channel via its [SyncChannelKey]. Channels expose sync state,
+ * errors, and active status so UI can observe and display consistent syncing feedback.
+ */
 @Singleton
 class SyncCoordinator @Inject constructor() {
 

@@ -24,26 +24,28 @@ Bonus/UI Enhancements:
 - Consistent input styling and MaterialComponents theming.
 
 ## Architecture Overview
-- **MVVM** with `StateFlow` for UI state and `SharedFlow` for one‑off events.
-- **Repository pattern** abstracting data sources.
-- **Room** for local persistence (single source of truth).
-- **Hilt** for dependency injection.
 - **Multi‑module** structure:
   - `app`: UI (Fragments, ViewModels, adapters)
   - `domain`: models + use cases
   - `data`: repositories + Room data sources
   - `network`: mocked auth/network layer
   - `core-arch`: shared architecture utilities
+- **MVVM** with `StateFlow` for UI state and `SharedFlow` for one‑off events.
+- **Repository pattern** abstracting data sources.
+- **Room** for local persistence (single source of truth).
+- **Hilt** for dependency injection.
+- **SyncCoordinator**: centralizes sync/error reporting via channels so UI can surface sync state consistently.
+- **Fake network layer**: Ktor `MockEngine` + JSON serialization simulate API calls and responses, enabling repository sync flows without a real backend.
 
 ## Assumptions / Design Decisions
 - Authentication is intentionally mocked for assessment purposes (no real backend).
 - Local database is the source of truth; UI updates are driven by Flow.
 - Search and filter are client‑side.
-- Stock transactions are recorded locally and update stock levels immediately.
+- Stock transactions are applied remotely first, then persisted locally on success.
 - The app uses a MaterialComponents theme and shared styles for consistency.
 
 ## Known Issues / Limitations
 - Authentication is fake (single hardcoded user).
-- No real network sync; “offline” state is simulated via connectivity checks.
+- Sync logic is implemented, but it targets the fake network layer (MockEngine) rather than a real backend; offline state is simulated via connectivity checks.
 - Selection handle styling may vary across OEM devices (custom handles are used for visibility).
 - No automated tests included.

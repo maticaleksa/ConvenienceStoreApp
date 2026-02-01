@@ -5,6 +5,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 
+/**
+ * Per-feature sync state holder.
+ *
+ * Wraps a sync operation in [execute], prevents concurrent runs, and exposes
+ * [state] + [isActive] for UI/repository observation. Errors are surfaced via [reportError].
+ */
 class SyncChannel {
 
     private val _state = MutableStateFlow<SyncState>(SyncState.Idle)
