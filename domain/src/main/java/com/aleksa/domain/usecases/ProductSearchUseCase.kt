@@ -10,9 +10,20 @@ data class ProductFilters(
     val categoryIds: Set<String> = emptySet()
 )
 
+/**
+ * Provides a reactive product search with optional category filtering.
+ */
 class ProductSearchUseCase @Inject constructor(
     private val productRepository: ProductRepository
 ) {
+    /**
+     * Observes products matching the query and optional filters.
+     *
+     * @param query Free-text search query; blank returns all products.
+     * @param filters Optional category filtering rules. Category ids are trimmed and
+     * filtered for non-blank values before being applied.
+     * @return A flow of products filtered by query and category ids.
+     */
     operator fun invoke(
         query: String,
         filters: ProductFilters = ProductFilters()

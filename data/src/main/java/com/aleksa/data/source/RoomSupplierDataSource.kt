@@ -10,6 +10,9 @@ class RoomSupplierDataSource @Inject constructor(
 ) : SupplierDataSource {
     override fun getAllFlow(): Flow<List<SupplierEntity>> = supplierDao.getAllFlow()
 
+    /**
+     * Delegates to the DAO search; expects a wildcarded, lowercased LIKE pattern.
+     */
     override fun searchFlow(query: String): Flow<List<SupplierEntity>> =
         supplierDao.searchFlow(query)
 

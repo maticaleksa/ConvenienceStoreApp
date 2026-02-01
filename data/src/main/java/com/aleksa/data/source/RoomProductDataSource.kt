@@ -13,6 +13,9 @@ class RoomProductDataSource @Inject constructor(
 
     override fun getAllFlow(): Flow<List<ProductWithCategorySupplier>> = productDao.getAllFlow()
 
+    /**
+     * Delegates to the DAO search; expects a wildcarded, lowercased LIKE pattern.
+     */
     override fun searchFlow(query: String): Flow<List<ProductWithCategorySupplier>> =
         productDao.searchFlow(query)
 
@@ -20,6 +23,9 @@ class RoomProductDataSource @Inject constructor(
 
     override suspend fun getAllIds(): List<String> = productDao.getAllIds()
 
+    /**
+     * Returns supplier ids that are referenced by at least one product.
+     */
     override suspend fun getSupplierIdsInUse(): List<String> =
         productDao.getSupplierIdsInUse()
 

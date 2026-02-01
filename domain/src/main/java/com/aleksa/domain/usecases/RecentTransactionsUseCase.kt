@@ -10,9 +10,19 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import javax.inject.Inject
 
+/**
+ * Provides a reactive list of transactions within a recent time window.
+ */
 class RecentTransactionsUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) {
+    /**
+     * Observes transactions from the last [days] days.
+     *
+     * @param days Number of days to include; non-positive yields an empty list.
+     * The cutoff is computed in UTC and includes transactions on or after it.
+     * @return A flow of transactions within the computed range.
+     */
     operator fun invoke(days: Int): Flow<List<Transaction>> {
         val safeDays = days.coerceAtLeast(0)
         return transactionRepository.observeAll()

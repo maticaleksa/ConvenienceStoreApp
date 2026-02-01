@@ -57,6 +57,11 @@ class SupplierRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Searches locally with a trimmed, lowercased, wildcarded query.
+     *
+     * Blank queries fall back to [observeAll].
+     */
     override fun observeSearch(query: String): Flow<List<Supplier>> {
         val trimmed = query.trim()
         if (trimmed.isBlank()) return observeAll()
