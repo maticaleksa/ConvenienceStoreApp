@@ -10,6 +10,7 @@ interface ProductDataSource {
     fun searchFlow(query: String): Flow<List<ProductWithCategorySupplier>>
     suspend fun count(): Int
     suspend fun getAllIds(): List<String>
+    suspend fun getSupplierIdsInUse(): List<String>
     suspend fun getById(id: String): ProductWithCategorySupplier?
     fun getByIdFlow(id: String): Flow<ProductWithCategorySupplier?>
     suspend fun upsertAll(products: List<ProductEntity>)

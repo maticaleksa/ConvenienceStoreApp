@@ -20,6 +20,9 @@ class RoomProductDataSource @Inject constructor(
 
     override suspend fun getAllIds(): List<String> = productDao.getAllIds()
 
+    override suspend fun getSupplierIdsInUse(): List<String> =
+        productDao.getSupplierIdsInUse()
+
     override suspend fun getById(id: String): ProductWithCategorySupplier? = productDao.getById(id)
 
     override fun getByIdFlow(id: String): Flow<ProductWithCategorySupplier?> =

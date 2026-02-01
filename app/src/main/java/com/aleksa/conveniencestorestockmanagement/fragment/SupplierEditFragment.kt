@@ -13,6 +13,7 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.conveniencestorestockmanagement.uistate.SupplierEditUiState
 import com.aleksa.conveniencestorestockmanagement.uistate.UiEvent
 import com.aleksa.conveniencestorestockmanagement.viewmodel.SupplierEditViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -67,8 +68,11 @@ class SupplierEditFragment : BaseFragment(R.layout.fragment_supplier_edit) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event is UiEvent.NavigateBack) {
-                        findNavController().popBackStack()
+                    when (event) {
+                        is UiEvent.NavigateBack -> findNavController().popBackStack()
+                        is UiEvent.Message -> {
+                            Snackbar.make(view, event.text, Snackbar.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

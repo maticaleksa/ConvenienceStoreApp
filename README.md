@@ -21,7 +21,7 @@ Optional:
 
 Bonus/UI Enhancements:
 - Swipe‑to‑refresh on applicable screens.
-- Consistent input styling and MaterialComponents theming.
+- Offline mode
 
 ## Architecture Overview
 - **Multi‑module** structure:

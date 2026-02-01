@@ -11,7 +11,7 @@ import com.aleksa.domain.model.Transaction
 import com.aleksa.network.NetworkResult
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
-import com.aleksa.core.arch.sync.UnknownSyncError
+import com.aleksa.domain.error.TransactionSyncError
 import com.aleksa.domain.event.TransactionDataCommand
 import com.aleksa.domain.event.TransactionDataCommand.RefreshAll
 import kotlinx.coroutines.CoroutineScope
@@ -79,8 +79,10 @@ class TransactionRepositoryImpl @Inject constructor(
             }
             is NetworkResult.Error -> {
                 syncChannel.reportError(
-                    UnknownSyncError(
-                        networkResult.error.message ?: "Failed to refresh transactions"
+                    TransactionSyncError.Network(
+                        message = networkResult.error.message ?: "Failed to refresh transactions",
+                        code = networkResult.error.code,
+                        details = networkResult.error.details
                     ),
                 )
             }

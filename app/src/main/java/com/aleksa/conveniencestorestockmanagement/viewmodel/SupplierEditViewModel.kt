@@ -66,10 +66,15 @@ class SupplierEditViewModel @Inject constructor(
 
     fun onSaveClicked() {
         val state = _uiState.value
+        val trimmedName = state.name.trim()
+        if (trimmedName.isBlank()) {
+            _events.tryEmit(UiEvent.Message("Supplier name is required."))
+            return
+        }
         viewModelScope.launch {
             val supplier = Supplier(
                 id = supplierId,
-                name = state.name.trim(),
+                name = trimmedName,
                 contactPerson = state.contactPerson.trim(),
                 phone = state.phone.trim(),
                 email = state.email.trim(),

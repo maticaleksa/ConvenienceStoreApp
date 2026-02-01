@@ -37,6 +37,9 @@ interface ProductDao {
     @Query("SELECT id FROM products")
     suspend fun getAllIds(): List<String>
 
+    @Query("SELECT DISTINCT supplierId FROM products")
+    suspend fun getSupplierIdsInUse(): List<String>
+
     @Transaction
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
     suspend fun getById(id: String): ProductWithCategorySupplier?

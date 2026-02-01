@@ -4,6 +4,7 @@ import com.aleksa.data.database.SupplierEntity
 import com.aleksa.data.database.toDomain
 import com.aleksa.data.database.toEntity
 import com.aleksa.data.remote.toDto
+import com.aleksa.data.source.ProductDataSource
 import com.aleksa.data.source.SupplierDataSource
 import com.aleksa.data.source.SupplierRemoteDataSource
 import com.aleksa.domain.event.SupplierDataCommand
@@ -22,11 +23,12 @@ import javax.inject.Singleton
 import com.aleksa.core.arch.coroutines.AppScope
 import com.aleksa.core.arch.event.DataCommandBus
 import com.aleksa.core.arch.sync.SyncCoordinator
-import com.aleksa.core.arch.sync.UnknownSyncError
+import com.aleksa.domain.error.SupplierSyncError
 
 @Singleton
 class SupplierRepositoryImpl @Inject constructor(
     private val localDataSource: SupplierDataSource,
+    private val productDataSource: ProductDataSource,
     private val remoteDataSource: SupplierRemoteDataSource,
     private val dataCommandBus: DataCommandBus,
     syncCoordinator: SyncCoordinator,
@@ -87,7 +89,11 @@ class SupplierRepositoryImpl @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     syncChannel.reportError(
-                        UnknownSyncError(message = networkResult.error.message)
+                        SupplierSyncError.Network(
+                            message = networkResult.error.message,
+                            code = networkResult.error.code,
+                            details = networkResult.error.details
+                        )
                     )
                 }
             }
@@ -99,7 +105,8 @@ class SupplierRepositoryImpl @Inject constructor(
     ) {
         val serverIds = freshSuppliers.map { it.id }.toSet()
         val localIds = localDataSource.getAllIds().toSet()
-        val deletedIds = localIds - serverIds
+        val inUseSupplierIds = productDataSource.getSupplierIdsInUse().toSet()
+        val deletedIds = (localIds - serverIds) - inUseSupplierIds
         if (deletedIds.isNotEmpty()) {
             localDataSource.deleteByIds(deletedIds)
         }
