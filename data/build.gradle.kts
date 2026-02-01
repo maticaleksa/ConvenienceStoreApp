@@ -37,4 +37,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.javax.inject)
     kapt(libs.androidx.room.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
