@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class StockTransactionFragment : BaseFragment(R.layout.fragment_stock_transaction) {
 

@@ -35,7 +35,7 @@ class DashboardFragment : BaseFragment(R.layout.fragment_dashboard) {
         val recentList = view.findViewById<RecyclerView>(R.id.dashboard_recent_list)
         val recentEmpty = view.findViewById<TextView>(R.id.dashboard_recent_empty)
         val recentToggle = view.findViewById<TextView>(R.id.dashboard_recent_toggle)
-        val adapter = ProductsAdapter()
+        val adapter = ProductsAdapter(showEditIcon = false)
         val recentAdapter = TransactionsAdapter()
         listView.layoutManager = LinearLayoutManager(requireContext())
         listView.adapter = adapter

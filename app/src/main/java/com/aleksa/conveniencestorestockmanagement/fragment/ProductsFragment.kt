@@ -44,7 +44,7 @@ class ProductsFragment : BaseFragment(R.layout.fragment_products) {
         val filterBadge = view.findViewById<android.view.View>(R.id.products_filter_badge)
         val addFab =
             view.findViewById<FloatingActionButton>(R.id.products_add_fab)
-        val adapter = ProductsAdapter { product ->
+        val adapter = ProductsAdapter(showEditIcon = true) { product ->
             val args = android.os.Bundle().apply {
                 putString("productId", product.id)
                 putString("productName", product.name)

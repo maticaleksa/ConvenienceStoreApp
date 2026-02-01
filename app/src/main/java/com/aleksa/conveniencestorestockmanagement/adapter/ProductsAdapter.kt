@@ -11,6 +11,7 @@ import com.aleksa.conveniencestorestockmanagement.R
 import com.aleksa.domain.model.Product
 
 class ProductsAdapter(
+    private val showEditIcon: Boolean = false,
     private val onItemClick: (Product) -> Unit = {}
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback) {
 
@@ -21,7 +22,7 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClick)
+        holder.bind(getItem(position), onItemClick, showEditIcon)
     }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,7 +35,9 @@ class ProductsAdapter(
         private val barcodeView: TextView = itemView.findViewById(R.id.product_barcode)
         private val minStockView: TextView = itemView.findViewById(R.id.product_min_stock)
 
-        fun bind(product: Product, onItemClick: (Product) -> Unit) {
+        private val editIconView: View = itemView.findViewById(R.id.product_edit_icon)
+
+        fun bind(product: Product, onItemClick: (Product) -> Unit, showEditIcon: Boolean) {
             nameView.text = product.name
             descriptionView.text = product.description
             categoryView.text = product.category.name
@@ -56,6 +59,7 @@ class ProductsAdapter(
                 R.string.product_min_stock_format,
                 product.minimumStockLevel
             )
+            editIconView.visibility = if (showEditIcon) View.VISIBLE else View.GONE
             itemView.setOnClickListener { onItemClick(product) }
         }
     }

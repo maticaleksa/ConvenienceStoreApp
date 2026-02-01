@@ -116,6 +116,21 @@ class ProductEditViewModel @Inject constructor(
     fun onSaveClicked() {
         val state = _uiState.value
         Log.d(TAG, "onSaveClicked: id=${productId} name=${state.name}")
+        val trimmedName = state.name.trim()
+        if (trimmedName.isBlank()) {
+            _events.tryEmit(UiEvent.Message("Product name is required."))
+            return
+        }
+        val hasSupplier = !state.supplierId.isNullOrBlank() || state.supplierName.isNotBlank()
+        if (!hasSupplier) {
+            _events.tryEmit(UiEvent.Message("Supplier is required."))
+            return
+        }
+        val priceValue = state.price.toDoubleOrNull()
+        if (priceValue == null || priceValue <= 0.0) {
+            _events.tryEmit(UiEvent.Message("Price is required."))
+            return
+        }
         viewModelScope.launch {
             val resolvedCategory = Category(
                 id = state.categoryId ?: productCategoryId ?: "uncategorized",
@@ -131,9 +146,9 @@ class ProductEditViewModel @Inject constructor(
             )
             val product = Product(
                 id = productId ?: UUID.randomUUID().toString(),
-                name = state.name.trim(),
+                name = trimmedName,
                 description = state.description.trim(),
-                price = Money.ofDouble(state.price.toDoubleOrNull() ?: 0.0),
+                price = Money.ofDouble(priceValue),
                 category = resolvedCategory,
                 barcode = state.barcode.trim(),
                 supplier = resolvedSupplier,
