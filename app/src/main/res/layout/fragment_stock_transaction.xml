@@ -62,7 +62,7 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/stock_decrement"
-                app:srcCompat="@android:drawable/ic_media_previous"
+                app:srcCompat="@drawable/ic_minus"
                 app:tint="@color/bottom_nav_item_unselected" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -87,7 +87,7 @@
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/stock_increment"
-                app:srcCompat="@android:drawable/ic_media_next"
+                app:srcCompat="@drawable/ic_plus"
                 app:tint="@color/bottom_nav_item_unselected" />
         </LinearLayout>
 
