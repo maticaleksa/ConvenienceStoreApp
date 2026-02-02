@@ -21,6 +21,7 @@ Optional:
 
 Bonus/UI Enhancements:
 - Swipe‑to‑refresh on applicable screens.
+- Viewmodel unit tests
 - Offline mode
 
 ## Architecture Overview
@@ -49,3 +50,6 @@ Bonus/UI Enhancements:
 - Sync logic is implemented, but it targets the fake network layer (MockEngine) rather than a real backend; offline state is simulated via connectivity checks.
 - Selection handle styling may vary across OEM devices (custom handles are used for visibility).
 - No automated tests included.
+- UI polish is limited due to time constraints; layouts prioritize correctness and state handling over visual refinement.  
+  However, the UI layer is intentionally thin and well-isolated (state-driven via ViewModels), making it easy to swap or upgrade the UI (e.g., redesigns or migration to Jetpack Compose) without impacting domain or data layers.
+
